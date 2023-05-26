@@ -1,0 +1,128 @@
+{
+  "name": "propz-backend",
+  "vendor": "lojasantoantonio",
+  "version": "0.0.0",
+  "title": "Loja Santo Antonio Service",
+  "description": "This app provides an Admin Interface for the configurations and a integration to the Loja santo antonio services",
+  "builders": {
+    "node": "6.x",
+    "docs": "0.x"
+  },
+  "settingsSchema": {
+    "title": "Loja santo antonio",
+    "type": "object",
+    "properties": {
+      "domain": {
+        "title": "Domínio",
+        "description": "Domínio da Propz para consulta",
+        "type": "string"
+      },
+      "token": {
+        "title": "Token de autenticação",
+        "description": "Digite o token de autenticação informado pela Propz",
+        "type": "string"
+      },
+      "username": {
+        "title": "Username",
+        "description": "Digite o username informado pela Propz",
+        "type": "string"
+      },
+      "password": {
+        "title": "Password",
+        "description": "Digite senha informada pela Propz",
+        "type": "string"
+      },
+      "storeId": {
+        "title": "Store ID",
+        "description": "ID da loja",
+        "type": "string"
+      },
+      "formUrl": {
+        "title": "Form Url",
+        "description": "Digite a URL do formulário de cadastro informada pela Propz",
+        "type": "string"
+      },
+      "appKey": {
+        "title": "Vtex App Key",
+        "description": "Digite o Vtex App Key com autorização para alteração de preço no checkout",
+        "type": "string"
+      },
+      "appToken": {
+        "title": "Vtex App Token",
+        "description": "Digite o Vtex App Token com autorização para alteração de preço no checkout",
+        "type": "string"
+      }
+    }
+  },
+  "billingOptions": {
+    "type": "billable",
+    "support": {
+      "email": "apppropz@maeztra.movidesk.com"
+    },
+    "availableCountries": [
+      "*"
+    ],
+    "plans": [
+      {
+        "id": "PlanBRL",
+        "currency": "BRL",
+        "price": {
+          "subscription": 3500
+        }
+      },
+      {
+        "id": "PlanUSD",
+        "currency": "USD",
+        "price": {
+          "subscription": 700
+        }
+      }
+    ]
+  },
+  "credentialType": "absolute",
+  "policies": [
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "mcloud.propzmedia.com",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.vtex.com",
+        "path": "/{{account}}}/pricing/prices/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "{{account}}.vtexcommercestable.com.br",
+        "path": "/api/catalog_system/pvt/sku/stockkeepingunitbyid/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "{{account}}.vtexcommercestable.com.br",
+        "path": "/api/checkout/pub/orderForm/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/api/*"
+      }
+    },
+    {
+      "name": "colossus-fire-event"
+    },
+    {
+      "name": "colossus-write-logs"
+    }
+  ],
+  "dependencies": {},
+  "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
+}

@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "@vtex/clients": "^2.8.0",
+    "axios": "^0.21.1",
+    "btoa": "^1.2.1",
+    "co-body": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/btoa": "^1.2.3",
+    "@types/co-body": "^0.0.3",
+    "@types/node": "12.x",
+    "@vtex/api": "6.45.15",
+    "eslint": "^6.3.0",
+    "eslint-config-vtex": "^11.0.0",
+    "lojasantoantonio.propz-backend": "https://adriano--lojasantoantonio.myvtex.com/_v/private/typings/linked/v1/lojasantoantonio.propz-backend@0.0.0+build1684842161/public/_types/react",
+    "prettier": "^1.18.2",
+    "typescript": "3.9.7"
+  },
+  "resolutions": {
+    "**/**/lodash": "^4.17.19"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit --pretty && eslint -c .eslintrc.json --fix './**/*.ts'"
+  },
+  "version": "0.7.2"
+}

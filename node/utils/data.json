@@ -1,0 +1,50 @@
+[
+  {
+    "active": true,
+    "promotion": {
+      "active": true,
+      "discountAmount": 0,
+      "discountPercent": 0,
+      "finalPrice": 150.0,
+      "properties": {
+        "PRODUCT_ID_INCLUSION": "86383"
+      }
+    }
+  },
+  {
+    "active": true,
+    "promotion": {
+      "active": true,
+      "discountAmount": 0,
+      "discountPercent": 0,
+      "finalPrice": 54.99,
+      "properties": {
+        "PRODUCT_ID_INCLUSION": "52093"
+      }
+    }
+  },
+  {
+    "active": true,
+    "promotion": {
+      "active": true,
+      "discountAmount": 0,
+      "discountPercent": 0,
+      "finalPrice": 59.99,
+      "properties": {
+        "PRODUCT_ID_INCLUSION": "68828"
+      }
+    }
+  },
+  {
+    "active": true,
+    "promotion": {
+      "active": true,
+      "discountAmount": 0,
+      "discountPercent": 0,
+      "finalPrice": 49.99,
+      "properties": {
+        "PRODUCT_ID_INCLUSION": "52094"
+      }
+    }
+  }
+]

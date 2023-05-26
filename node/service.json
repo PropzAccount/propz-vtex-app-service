@@ -1,0 +1,54 @@
+{
+  "memory": 128,
+  "ttl": 10,
+  "timeout": 10,
+  "minReplicas": 2,
+  "maxReplicas": 10,
+  "workers": 4,
+  "routes": {
+    "postCustomer": {
+      "path": "/post-client",
+      "public": true
+    },
+    "getCustomer": {
+      "path": "/get-client",
+      "public": true
+    },
+    "getPromotion": {
+      "path": "/get-promotion",
+      "public": true
+    },
+    "getPrice": {
+      "path": "/get-price",
+      "public": true
+    },
+    "putPrice": {
+      "path": "/put-price",
+      "public": true
+    },
+    "postPrice": {
+      "path": "/post-price",
+      "public": true
+    },
+    "getFormUrl": {
+      "path": "/get-form",
+      "public": true
+    },
+    "getPromotionJson": {
+      "path": "/get-promotion-json",
+      "public": true
+    },
+    "getProductList": {
+      "path": "/get-product-list",
+      "public": true
+    },
+    "postPromotion": {
+      "path": "/post-promotion",
+      "public": true
+    },
+    "test": {
+      "path": "/test/:skuId",
+      "public": true
+    }
+  }
+}
