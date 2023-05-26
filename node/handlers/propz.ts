@@ -92,6 +92,7 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
     })
     
     console.log(data)
+    
 
     ctx.status = 200
     ctx.body = data
