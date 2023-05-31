@@ -4,7 +4,6 @@ import { json } from 'co-body'
 
 // eslint-disable-next-line prettier/prettier
 import type { Items } from '../types/Items'
-
 const getAppId = (): string => {
   return process.env.VTEX_APP_ID ?? ''
 }
@@ -40,7 +39,7 @@ export async function teste(context: Context, next: () => Promise<any>) {
 // get iFrame promotion
 export async function getPromotion(ctx: Context, next: () => Promise<any>) {
   const {
-    clients: { Propz, apps },
+    clients: { Propz, Vtex,  apps },
   } = ctx
 
   const app: string = getAppId()
@@ -74,28 +73,57 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
       settings.username,
       settings.password
     )
-    console.log(response.items)
 
-    const data = response.items.map((item: Items ) => {
-      return {
-        active: item.active,
-        promotion: {
-          active: item.promotion.active,
-          discountAmount: item.promotion.discountAmount,
-          discountPercent: item.promotion.discountPercent,
-          finalPrice: item.promotion.finalPrice,
-          properties: {
-            PRODUCT_ID_INCLUSION: item.promotion.properties.PRODUCT_ID_INCLUSION
-          }
+    const data = response.items.reduce(async ( acc: any , propzItem: Items ) => {
+      const productRefPropz = propzItem.promotion.properties.PRODUCT_ID_INCLUSION
+
+      if(propzItem.active && propzItem.promotion.active){
+
+        const [ vtexData ] = await Vtex.getSkuAndContext('lojasantoantonio',  productRefPropz)
+        
+        const productRefVtex = vtexData.items[0].referenceId[0].Value
+        
+        if(productRefVtex === productRefPropz){
+         
+          acc.push({
+            productId: vtexData.productId,
+            description: vtexData.description,
+            productName: vtexData.productName,
+            productReference: vtexData.productReference,
+            linkText: vtexData.linkText,
+            brand: vtexData.brand,
+            brandId: vtexData.brandId,
+            link: vtexData.link,
+            categories: vtexData.categories,
+            categoryId: vtexData.categoryId,
+            priceRange: {
+              sellingPrice: {
+                highPrice: propzItem.promotion.finalPrice || 10.99,
+                lowPrice: propzItem.promotion.finalPrice || 10.99,
+                __typename: 'PriceRange',
+              },
+              listPrice: {
+                highPrice: propzItem.promotion.finalPrice || 20.99,
+                lowPrice: propzItem.promotion.finalPrice || 20.99,
+                __typename: 'PriceRange',
+              },
+              __typename: 'ProductPriceRange',
+            },
+            productClusters: vtexData.productClusters,
+            clusterHighlights: vtexData.clusterHighlights,
+            __typename: 'Product',
+            items: vtexData.items,
+            rule: null,
+            sku: vtexData.items[0],
+          })
         }
       }
-    })
-    
-    console.log(data)
-    
+
+      return acc
+    }, [])
 
     ctx.status = 200
-    ctx.body = data
+    ctx.body = await data
   } catch (error) {
     ctx.status = 400
     ctx.body = err
