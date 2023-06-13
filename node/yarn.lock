@@ -1743,9 +1743,9 @@ lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
 
-"lojasantoantonio.propz-backend@https://adriano--lojasantoantonio.myvtex.com/_v/private/typings/linked/v1/lojasantoantonio.propz-backend@0.0.0+build1684842161/public/_types/react":
+"lojasantoantonio.propz-backend@https://adriano--lojasantoantonio.myvtex.com/_v/private/typings/linked/v1/lojasantoantonio.propz-backend@0.0.0+build1685724550/public/_types/react":
   version "0.0.0"
-  resolved "https://adriano--lojasantoantonio.myvtex.com/_v/private/typings/linked/v1/lojasantoantonio.propz-backend@0.0.0+build1684842161/public/_types/react#fa7a0347e046eab3dd768998fc9252b2c0dd5aef"
+  resolved "https://adriano--lojasantoantonio.myvtex.com/_v/private/typings/linked/v1/lojasantoantonio.propz-backend@0.0.0+build1685724550/public/_types/react#fa7a0347e046eab3dd768998fc9252b2c0dd5aef"
 
 long@^2.4.0:
   version "2.4.0"

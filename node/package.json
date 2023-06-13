@@ -12,7 +12,7 @@
     "@vtex/api": "6.45.15",
     "eslint": "^6.3.0",
     "eslint-config-vtex": "^11.0.0",
-    "lojasantoantonio.propz-backend": "https://adriano--lojasantoantonio.myvtex.com/_v/private/typings/linked/v1/lojasantoantonio.propz-backend@0.0.0+build1684842161/public/_types/react",
+    "lojasantoantonio.propz-backend": "https://adriano--lojasantoantonio.myvtex.com/_v/private/typings/linked/v1/lojasantoantonio.propz-backend@0.0.0+build1685724550/public/_types/react",
     "prettier": "^1.18.2",
     "typescript": "3.9.7"
   },
