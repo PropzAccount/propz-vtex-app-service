@@ -1,4 +1,5 @@
 // node/index.ts
+// eslint-disable-next-line prettier/prettier
 import type {
   ServiceContext,
   ParamsContext,
@@ -12,11 +13,9 @@ import {
 import { Clients } from './clients'
 import {
   getPromotion,
-  getFormUrl,
-  getPromotionJson,
-  getProductList,
-  postPromotion,
-  teste
+  getPromotionMassive,
+  postRegisterPurchase,
+  postVerifyPurchase
 } from './handlers/propz'
 
 // import { updateLiveUsers } from './event/liveUsersUpdate'
@@ -58,37 +57,6 @@ export default new Service<Clients, State, ParamsContext>({
   },
   routes: {
     /**
-         * ?document=45100809809
-         * Body:
-         { 
-            "firstName": { 
-                "value": "Robert", 
-                "type": "STRING" 
-            },
-            "lastName": {
-                "value": "Smith",
-                "type": "STRING"
-            },
-            "mobilePhone": {
-                "value": "+55011999999999",
-                "type": "STRING"
-            },
-            "height": { 
-                "value": 180, 
-                "type": "INTEGER" 
-            }, 
-            "dateOfBirth": { 
-                "value": "1978-08-11T14:00:00.000Z",
-                "type": "DATE" 
-            },  
-            "aboutMe": { 
-                "value": "About me text", 
-                "type": "TEXT" 
-            }
-        }
-         */
-
-    /**
      * body:
      *   {
      *       "customerId":"45100809809"
@@ -97,104 +65,17 @@ export default new Service<Clients, State, ParamsContext>({
     getPromotion: method({
       GET: [getPromotion],
     }),
-    /**
-        {
-            "sessionId":"SESSÃO DO CLIENTE?",
-            "customer":{
-                "customerId":"DOCUMENTO"
-            },
-            "ticket":{
-                "ticketId":"ID DO PEDIDO",
-                "amount": TOTAL DO PEDIDO,
-                "date":"2019-03-15T11:33:23.801Z",
-                "blockUpdate":0,
-                "items":[
-                    {
-                        "itemId":"POSIÇÃO NO CARRINHO",
-                        "ean":"4455",
-                        "unitPrice":10.99,
-                        "unitSize":"Unit",
-                        "quantity":3,
-                        "blockUpdate":0
-                    },
-                    {
-                        "itemId":"2",
-                        "ean":"4456",
-                        "unitPrice":8.33,
-                        "unitSize":"Kg",
-                        "quantity":1.00,
-                        "blockUpdate":1
-                    },
-                    {
-                        "itemId":"3",
-                        "ean":"4457",
-                        "unitPrice":4.83,
-                        "unitSize":"Kg",
-                        "quantity":3,
-                        "blockUpdate":0
-                    }
-                ]
-            }
-        }
+    
+    getPromotionMassive: method({
+      GET: [getPromotionMassive],
+    }),
 
-         */
+    postRegisterPurchase: method({
+      "POST": [postRegisterPurchase]
+    }),
 
-    /**
-        {
-            "sessionId":"SESSÃO DO CLIENTE?",
-            "customer":{
-                "customerId":"DOCUMENTO"
-            },
-            "ticket":{
-                "ticketId":"ID DO PEDIDO",
-                "amount": TOTAL DO PEDIDO,
-                "date":"2019-03-15T11:33:23.801Z",
-                "blockUpdate":0,
-                "items":[
-                    {
-                        "itemId":"POSIÇÃO NO CARRINHO",
-                        "ean":"4455",
-                        "unitPrice":10.99,
-                        "unitSize":"Unit",
-                        "quantity":3,
-                        "blockUpdate":0
-                    },
-                    {
-                        "itemId":"2",
-                        "ean":"4456",
-                        "unitPrice":8.33,
-                        "unitSize":"Kg",
-                        "quantity":1.00,
-                        "blockUpdate":1
-                    },
-                    {
-                        "itemId":"3",
-                        "ean":"4457",
-                        "unitPrice":4.83,
-                        "unitSize":"Kg",
-                        "quantity":3,
-                        "blockUpdate":0
-                    }
-                ]
-            }
-        }
-
-         */
-  
-    getFormUrl: method({
-      GET: [getFormUrl],
-    }),
-    getPromotionJson: method({
-      GET: [getPromotionJson],
-    }),
-    getProductList: method({
-      GET: [getProductList],
-    }),
-    postPromotion: method({
-      POST: [postPromotion],
-    }),
-    test: method({
-      GET: [teste],
-    }),
+    postVerifyPurchase: method({
+      "POST": [postVerifyPurchase]
+    })
   },
 })
