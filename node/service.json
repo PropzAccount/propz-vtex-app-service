@@ -6,48 +6,20 @@
   "maxReplicas": 10,
   "workers": 4,
   "routes": {
-    "postCustomer": {
-      "path": "/post-client",
-      "public": true
-    },
-    "getCustomer": {
-      "path": "/get-client",
-      "public": true
-    },
     "getPromotion": {
-      "path": "/get-promotion",
+      "path": "/_v/get-promotion",
       "public": true
     },
-    "getPrice": {
-      "path": "/get-price",
+    "getPromotionMassive": {
+      "path": "/_v/get-promotion-massive",
       "public": true
     },
-    "putPrice": {
-      "path": "/put-price",
+    "postRegisterPurchase": {
+      "path": "/_v/post-register-purchase",
       "public": true
     },
-    "postPrice": {
-      "path": "/post-price",
-      "public": true
-    },
-    "getFormUrl": {
-      "path": "/get-form",
-      "public": true
-    },
-    "getPromotionJson": {
-      "path": "/get-promotion-json",
-      "public": true
-    },
-    "getProductList": {
-      "path": "/get-product-list",
-      "public": true
-    },
-    "postPromotion": {
-      "path": "/post-promotion",
-      "public": true
-    },
-    "test": {
-      "path": "/test/:skuId",
+    "postVerifyPurchase": {
+      "path": "/_v/post-verify-purchase",
       "public": true
     }
   }
