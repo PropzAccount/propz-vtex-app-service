@@ -36,55 +36,71 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
   }
 
   try {
-    const response = await Propz.getPromotion(domain, token, query.document, username, password)
-
-    const data = response.items.reduce(async ( acc: any , propzItem: Items ) => {
-      const productRefPropz = propzItem.promotion.properties.PRODUCT_ID_INCLUSION
-
-      if(propzItem.active && propzItem.promotion.active){
-
-        const [ vtexData ] = await Vtex.getSkuAndContext(account,  productRefPropz)
+    const processPromotionData = async (response: any) => {
+      const promotions = await Promise.all(response.items.map(async (propzItem: Items ) => {
+    
+        if(propzItem.active && propzItem.promotion.active){
         
-        const productRefVtex = vtexData.items[0].referenceId[0].Value
-        
-        if(productRefVtex === productRefPropz){
-         
-          acc.push({
-            productId: vtexData.productId,
-            description: vtexData.description,
-            productName: vtexData.productName,
-            productReference: vtexData.productReference,
-            linkText: vtexData.linkText,
-            brand: vtexData.brand,
-            brandId: vtexData.brandId,
-            link: vtexData.link,
-            categories: vtexData.categories,
-            categoryId: vtexData.categoryId,
-            priceRange: {
-              sellingPrice: {
-                highPrice: propzItem.promotion.finalPrice || 10.99,
-                lowPrice: propzItem.promotion.finalPrice || 10.99,
-                __typename: 'PriceRange',
-              },
-              listPrice: {
-                highPrice: propzItem.promotion.finalPrice || 20.99,
-                lowPrice: propzItem.promotion.finalPrice || 20.99,
-                __typename: 'PriceRange',
-              },
-              __typename: 'ProductPriceRange',
-            },
-            productClusters: vtexData.productClusters,
-            clusterHighlights: vtexData.clusterHighlights,
-            __typename: 'Product',
-            items: vtexData.items,
-            rule: null,
-            sku: vtexData.items[0],
-          })
+        const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION.split(',')
+    
+         const producsVtex = await Promise.all(PRODUCTS_IDS_INCLUSIONS.map(async(product: string) => {
+
+            const [ vtexData ] = await Vtex.getSkuAndContext(account,  product)
+
+            const productRefVtex = vtexData.items[0].referenceId[0].Value
+    
+            if(productRefVtex === product){
+              return {
+                   productId: vtexData.productId,
+                   description: vtexData.description,
+                   productName: vtexData.productName,
+                   productReference: vtexData.productReference,
+                   linkText: vtexData.linkText,
+                   brand: vtexData.brand,
+                   brandId: vtexData.brandId,
+                   link: vtexData.link,
+                   categories: vtexData.categories,
+                   categoryId: vtexData.categoryId,
+                   priceRange: {
+                     sellingPrice: {
+                       highPrice: propzItem.promotion.finalPrice || 10.99,
+                       lowPrice: propzItem.promotion.finalPrice || 10.99,
+                       __typename: 'PriceRange',
+                     },
+                     listPrice: {
+                       highPrice: propzItem.promotion.finalPrice || 20.99,
+                       lowPrice: propzItem.promotion.finalPrice || 20.99,
+                       __typename: 'PriceRange',
+                     },
+                     __typename: 'ProductPriceRange',
+                   },
+                   productClusters: vtexData.productClusters,
+                   clusterHighlights: vtexData.clusterHighlights,
+                   __typename: 'Product',
+                   items: vtexData.items,
+                   rule: null,
+                   sku: vtexData.items[0],
+               }
+            }
+
+            return product
+
+          }))
+
+          return producsVtex
         }
-      }
 
-      return acc
-    }, [])
+        return propzItem
+
+      }))
+
+      const promotionReduced = promotions.reduce((acc: any, promotion) => acc.concat(promotion) , [])
+
+      return promotionReduced
+    }
+    
+    const responsePromotionPropz = await Propz.getPromotion(domain, token, query.document, username, password)
+    const data = await processPromotionData(responsePromotionPropz)
 
     ctx.status = 200
     ctx.body = data
@@ -123,60 +139,74 @@ export async function getPromotionMassive (ctx: Context, next: () => Promise<any
   }
 
   try {
-    const response = await Propz.getPromotionMassive(domain, token, query.document, username, password)
+    const processPromotionData = async (response: any) => {
+      const promotions = await Promise.all(response.items.map(async (propzItem: Items ) => {
+    
+        if(propzItem.active && propzItem.promotion.active){
+    
+        const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION.split(',')
+      
+         const producsVtex = await Promise.all(PRODUCTS_IDS_INCLUSIONS.map(async(product: string) => {
 
-    // eslint-disable-next-line prefer-const
-    const data = response.items.reduce(async ( acc: any , propzItem: Items) => {
-      const productRefPropz = propzItem.promotion.properties.PRODUCT_ID_INCLUSION
+            const [ vtexData ] = await Vtex.getSkuAndContext(account,  product)
 
-      if(propzItem.active && propzItem.promotion.active){
+            const productRefVtex = vtexData.items[0].referenceId[0].Value
+    
+            if(productRefVtex === product){
+              return {
+                   productId: vtexData.productId,
+                   description: vtexData.description,
+                   productName: vtexData.productName,
+                   productReference: vtexData.productReference,
+                   linkText: vtexData.linkText,
+                   brand: vtexData.brand,
+                   brandId: vtexData.brandId,
+                   link: vtexData.link,
+                   categories: vtexData.categories,
+                   categoryId: vtexData.categoryId,
+                   priceRange: {
+                     sellingPrice: {
+                       highPrice: propzItem.promotion.finalPrice || 10.99,
+                       lowPrice: propzItem.promotion.finalPrice || 10.99,
+                       __typename: 'PriceRange',
+                     },
+                     listPrice: {
+                       highPrice: propzItem.promotion.finalPrice || 20.99,
+                       lowPrice: propzItem.promotion.finalPrice || 20.99,
+                       __typename: 'PriceRange',
+                     },
+                     __typename: 'ProductPriceRange',
+                   },
+                   productClusters: vtexData.productClusters,
+                   clusterHighlights: vtexData.clusterHighlights,
+                   __typename: 'Product',
+                   items: vtexData.items,
+                   rule: null,
+                   sku: vtexData.items[0],
+               }
+            }
 
-        const [ vtexData ] = await Vtex.getSkuAndContext(account,  productRefPropz)
-        
-        const productRefVtex = vtexData.items[0].referenceId[0].Value
-        
-        if(productRefVtex === productRefPropz){
-          console.log(productRefVtex === productRefPropz)
-         
-          acc.push({
-            productId: vtexData.productId,
-            description: vtexData.description,
-            productName: vtexData.productName,
-            productReference: vtexData.productReference,
-            linkText: vtexData.linkText,
-            brand: vtexData.brand,
-            brandId: vtexData.brandId,
-            link: vtexData.link,
-            categories: vtexData.categories,
-            categoryId: vtexData.categoryId,
-            priceRange: {
-              sellingPrice: {
-                highPrice: propzItem.promotion.finalPrice || 10.99,
-                lowPrice: propzItem.promotion.finalPrice || 10.99,
-                __typename: 'PriceRange',
-              },
-              listPrice: {
-                highPrice: propzItem.promotion.finalPrice || 20.99,
-                lowPrice: propzItem.promotion.finalPrice || 20.99,
-                __typename: 'PriceRange',
-              },
-              __typename: 'ProductPriceRange',
-            },
-            productClusters: vtexData.productClusters,
-            clusterHighlights: vtexData.clusterHighlights,
-            __typename: 'Product',
-            items: vtexData.items,
-            rule: null,
-            sku: vtexData.items[0],
-          })
+            return product
+
+          }))
+
+          return producsVtex
         }
-      }
 
-      return acc
-    }, [])
+        return propzItem
+
+      }))
+
+      const promotionReduced = promotions.reduce((acc: any, promotion) => acc.concat(promotion) , [])
+
+      return promotionReduced
+    }
+    
+    const responsePromotionPropz = await Propz.getPromotionMassive(domain, token, query.document, username, password)
+    const data = await processPromotionData(responsePromotionPropz)
     
     ctx.status = 200
-    ctx.body = await data
+    ctx.body = data
   } catch (error) {
     ctx.status = 400
     ctx.body = error
