@@ -5,6 +5,7 @@ import { json } from 'co-body'
 
 // eslint-disable-next-line prettier/prettier
 import type { Items } from '../types/Items'
+import { finalPricePropz } from '../utils/finalPricePropz'
 
 const getAppId = (): string => {
   return process.env.VTEX_APP_ID ?? ''
@@ -38,9 +39,11 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
   try {
     const processPromotionData = async (response: any) => {
       const promotions = await Promise.all(response.items.map(async (propzItem: Items ) => {
-    
+       
+
+
         if(propzItem.active && propzItem.promotion.active){
-        
+
         const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION.split(',')
     
          const producsVtex = await Promise.all(PRODUCTS_IDS_INCLUSIONS.map(async(product: string) => {
@@ -48,7 +51,9 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
             const [ vtexData ] = await Vtex.getSkuAndContext(account,  product)
 
             const productRefVtex = vtexData.items[0].referenceId[0].Value
-    
+
+            // console.log(propzItem.promotion, vtexData.items[0].sellers[0].commertialOffer.PriceWithoutDiscount)  
+            finalPricePropz(propzItem.promotion,vtexData.items[0].sellers[0].commertialOffer.PriceWithoutDiscount)
             if(productRefVtex === product){
               return {
                    productId: vtexData.productId,
@@ -63,8 +68,8 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                    categoryId: vtexData.categoryId,
                    priceRange: {
                      sellingPrice: {
-                       highPrice: propzItem.promotion.finalPrice || 10.99,
-                       lowPrice: propzItem.promotion.finalPrice || 10.99,
+                       highPrice: finalPricePropz(propzItem.promotion,vtexData.items[0].sellers[0].commertialOffer.PriceWithoutDiscount) || 10.99,
+                       lowPrice: finalPricePropz(propzItem.promotion,vtexData.items[0].sellers[0].commertialOffer.PriceWithoutDiscount) || 10.99,
                        __typename: 'PriceRange',
                      },
                      listPrice: {
@@ -100,6 +105,12 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
     }
     
     const responsePromotionPropz = await Propz.getPromotion(domain, token, query.document, username, password)
+    
+    
+
+
+
+
     const data = await processPromotionData(responsePromotionPropz)
 
     ctx.status = 200
