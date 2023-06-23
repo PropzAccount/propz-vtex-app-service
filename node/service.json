@@ -21,6 +21,10 @@
     "postVerifyPurchase": {
       "path": "/_v/post-verify-purchase",
       "public": true
+    },
+    "postPriceManual": {
+      "path": "/_v/post-price-manual",
+      "public": true
     }
   }
 }
