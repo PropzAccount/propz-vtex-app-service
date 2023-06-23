@@ -20,13 +20,40 @@ export default class Vtex extends JanusClient {
     })
   }
 
-  // eslint-disable-next-line max-params
-  public getSkuPrice(account: string, appKey: string, appToken: string, skuId: string) {
+  public getOrderForm(account: string, orderFormId: string) {
     
-    return this.http.get(`https://api.vtex.com/${account}/pricing/prices/${skuId}`, {
-      metric: "getSkuPrice",
+    return this.http.get(`https://${account}.vtexcommercestable.com.br/api/checkout/pub/orderForm/${orderFormId}`, {
+      metric: "getOrderForm",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    })
+  
+  }
+
+  public getOrderFormConfiguration(account: string, appKey: string, appToken: string) {
+    
+    return this.http.get(`https://${account}.vtexcommercestable.com.br/api/checkout/pvt/configuration/orderForm`, {
+      metric: "getOrderFormConfiguration",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-VTEX-API-AppKey': appKey,
+        'X-VTEX-API-AppToken': appToken,
+      },
+    })
+  
+  }
+
+  // eslint-disable-next-line max-params
+  public postOrderFormConfigurationPriceManual(account: string, appKey: string, appToken: string, orderFormConfiguration: any) {
+    
+    return this.http.post(`https://${account}.vtexcommercestable.com.br/api/checkout/pvt/configuration/orderForm`, JSON.stringify(orderFormConfiguration) , {
+      metric: "postOrderFormConfigurationPriceManual",
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'X-VTEX-API-AppKey': appKey,
         'X-VTEX-API-AppToken': appToken,
       },
@@ -34,13 +61,16 @@ export default class Vtex extends JanusClient {
   }
   
   // eslint-disable-next-line max-params
-  public putPrice(account: string, orderFormId: string, itemIndex: number, discount: number) {
+  public putPrice(account: string, appKey: string, appToken: string, orderFormId: string, itemIndex: string, priceManual: any) {
     return this.http.put(
       `https://${account}.vtexcommercestable.com.br/api/checkout/pub/orderForm/${orderFormId}/items/${itemIndex}/price`, 
-    JSON.stringify({price: discount}), {
+    JSON.stringify({price: priceManual}), {
       metric: "putPrice",
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-VTEX-API-AppKey': appKey,
+        'X-VTEX-API-AppToken': appToken,
       },
     })
   }
