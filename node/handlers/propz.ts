@@ -40,8 +40,6 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
     const processPromotionData = async (response: any) => {
       const promotions = await Promise.all(response.items.map(async (propzItem: Items ) => {
        
-
-
         if(propzItem.active && propzItem.promotion.active){
 
         const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION.split(',')
@@ -51,9 +49,8 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
             const [ vtexData ] = await Vtex.getSkuAndContext(account,  product)
 
             const productRefVtex = vtexData.items[0].referenceId[0].Value
+            const { PriceWithoutDiscount, AvailableQuantity } = vtexData.items[0].sellers[0].commertialOffer
 
-            // console.log(propzItem.promotion, vtexData.items[0].sellers[0].commertialOffer.PriceWithoutDiscount)  
-            finalPricePropz(propzItem.promotion,vtexData.items[0].sellers[0].commertialOffer.PriceWithoutDiscount)
             if(productRefVtex === product){
               return {
                    productId: vtexData.productId,
@@ -68,13 +65,13 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                    categoryId: vtexData.categoryId,
                    priceRange: {
                      sellingPrice: {
-                       highPrice: finalPricePropz(propzItem.promotion,vtexData.items[0].sellers[0].commertialOffer.PriceWithoutDiscount) || 10.99,
-                       lowPrice: finalPricePropz(propzItem.promotion,vtexData.items[0].sellers[0].commertialOffer.PriceWithoutDiscount) || 10.99,
+                       highPrice: AvailableQuantity > 0 ? finalPricePropz(propzItem.promotion, PriceWithoutDiscount) : 0,
+                       lowPrice: AvailableQuantity > 0 ? finalPricePropz(propzItem.promotion, PriceWithoutDiscount) : 0,
                        __typename: 'PriceRange',
                      },
                      listPrice: {
-                       highPrice: propzItem.promotion.finalPrice || 20.99,
-                       lowPrice: propzItem.promotion.finalPrice || 20.99,
+                       highPrice:PriceWithoutDiscount ,
+                       lowPrice:  PriceWithoutDiscount,
                        __typename: 'PriceRange',
                      },
                      __typename: 'ProductPriceRange',
@@ -105,12 +102,6 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
     }
     
     const responsePromotionPropz = await Propz.getPromotion(domain, token, query.document, username, password)
-    
-    
-
-
-
-
     const data = await processPromotionData(responsePromotionPropz)
 
     ctx.status = 200
@@ -162,6 +153,7 @@ export async function getPromotionMassive (ctx: Context, next: () => Promise<any
             const [ vtexData ] = await Vtex.getSkuAndContext(account,  product)
 
             const productRefVtex = vtexData.items[0].referenceId[0].Value
+            const { PriceWithoutDiscount, AvailableQuantity} = vtexData.items[0].sellers[0].commertialOffer
     
             if(productRefVtex === product){
               return {
@@ -177,13 +169,13 @@ export async function getPromotionMassive (ctx: Context, next: () => Promise<any
                    categoryId: vtexData.categoryId,
                    priceRange: {
                      sellingPrice: {
-                       highPrice: propzItem.promotion.finalPrice || 10.99,
-                       lowPrice: propzItem.promotion.finalPrice || 10.99,
+                      highPrice:  AvailableQuantity > 0 ? finalPricePropz(propzItem.promotion, PriceWithoutDiscount) : 0,,
+                      lowPrice:  AvailableQuantity > 0 ? finalPricePropz(propzItem.promotion, PriceWithoutDiscount) : 0,,
                        __typename: 'PriceRange',
                      },
                      listPrice: {
-                       highPrice: propzItem.promotion.finalPrice || 20.99,
-                       lowPrice: propzItem.promotion.finalPrice || 20.99,
+                       highPrice: PriceWithoutDiscount,
+                       lowPrice: PriceWithoutDiscount,
                        __typename: 'PriceRange',
                      },
                      __typename: 'ProductPriceRange',
@@ -306,3 +298,131 @@ export async function postRegisterPurchase(
   await next()
 }
 
+
+export async function PostPriceManual(ctx: Context, next: () => Promise<any>){
+  const {
+    clients: { Propz, Vtex,  apps },
+    vtex: {
+      account
+    }
+  } = ctx
+
+  const err = {
+    success: false,
+    message: 'fill in all fields within the admin',
+  }
+
+  const app: string = getAppId()
+  const { domain, token, username, password, appKey, appToken } = await apps.getAppSettings(app)
+
+  const validation = await Propz.checkFields([domain, token, username, password, appKey, appToken])
+
+
+  if (!validation) {
+    ctx.status = 400
+    ctx.body = err
+  }
+
+  const data = await json(ctx.req)
+  const { orderFormId, document, items } = data 
+
+  const formatPrice = (price: any) => {
+    let value: string = price
+
+    value += '';
+
+    value = value.replace(/[\D]+/g,'');
+    value += '';
+    value = value.replace(/([0-9]{2})$/g, ".$1");
+  
+    if (value.length > 6) {
+      value = value.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+    }
+
+    return value
+  }
+
+  const processPromotionData = async (response: any) => {
+    const responseGetOrderFormConfiguration = await Vtex.getOrderFormConfiguration(account, appKey, appToken)
+
+    try {
+      await Promise.all(response.items.map(async (propzItem: Items ) => {
+    
+        if(propzItem.active && propzItem.promotion.active){
+  
+          if(responseGetOrderFormConfiguration){
+            await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
+              ...responseGetOrderFormConfiguration,
+              allowManualPrice: true
+            })
+  
+            const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION.split(',')
+  
+            const producsVtex = await Promise.all(PRODUCTS_IDS_INCLUSIONS.map(async(product: string) => {
+  
+              items.map(async(item: any, index: number) => {
+                if(item.productRefId === product){
+  
+                  const PriceWithoutDiscount = formatPrice(item.price)
+                  const price = finalPricePropz(propzItem.promotion, PriceWithoutDiscount)
+                  const priceFinal = price && String(price.toFixed(2)).replace(/[^\d]+/g,'')
+
+                  await Vtex.putPrice(account, appKey, appToken, orderFormId, String(index), Number(priceFinal))
+                }
+  
+                return item
+              })
+          
+              return product
+    
+            }))
+             
+            return producsVtex
+          }
+  
+        }
+  
+        return propzItem
+  
+      }))
+      
+
+    } catch (error) {
+      ctx.status = 400
+      ctx.body = error
+    }
+
+    await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
+      ...responseGetOrderFormConfiguration,
+      allowManualPrice: false
+    })
+
+    const getOrderForm = await Vtex.getOrderForm(account, orderFormId)
+
+    return getOrderForm.items
+  }
+
+  try {
+    const responsePromotionPropz = await Propz.getPromotion(domain, token, document, username, password)
+
+    if(responsePromotionPropz.items.length < 0){
+      const responsePromotionMassivePropz = await Propz.getPromotionMassive(domain, token, document, username, password)
+      const itemsOrderForm = await processPromotionData(responsePromotionMassivePropz)
+
+      ctx.status = 200
+      ctx.body = itemsOrderForm
+    } else {
+      const itemsOrderForm = await processPromotionData(responsePromotionPropz)
+
+      ctx.status = 200
+      ctx.body = itemsOrderForm
+    }
+  
+  } catch (error) {
+    ctx.status = 400
+    ctx.body = error
+  }
+  
+  ctx.set('cache-control', 'no-cache')
+  next()  
+}
