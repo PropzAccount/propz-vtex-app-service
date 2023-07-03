@@ -26,7 +26,7 @@ export default class PropzClient extends ExternalClient {
   }
 
   // eslint-disable-next-line max-params
-  public async getPromotion(
+  public async getPromotionShowCase(
     domain: string,
     token: string,
     document: number,
@@ -35,32 +35,12 @@ export default class PropzClient extends ExternalClient {
   ) {
     const auth = this.getAuthHeader(username, password);
 
-    return this.http.get(
-      `https://${domain}/v1/databases/${token}/retail/user-promotions/${document}?channel=ecom`,
-      {
-        metric: 'getPromotion',
-        nullIfNotFound: true,
-        headers: {
-          Authorization: auth,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-  }
-  
-  // eslint-disable-next-line max-params
-  public async getPromotionMassive( domain: string,
-    token: string,
-    document: number,
-    username: string,
-    password: string
-    ) {
-      const auth = this.getAuthHeader(username, password);
-
+    try {
+      
       return this.http.get(
-        `https://${domain}/v1/databases/${token}/retail/user-massive-promotions/${document}?channel=ecom`,
+        `https://${domain}/v1/databases/${token}/retail/promotion-showcase/${document}?channel=ecom`,
         {
-          metric: 'getPromotionMassive',
+          metric: 'getPromotionShowcase',
           nullIfNotFound: true,
           headers: {
             Authorization: auth,
@@ -68,6 +48,10 @@ export default class PropzClient extends ExternalClient {
           },
         }
       )
+    } catch (error) {
+      return error
+    }
+
   }
 
   // eslint-disable-next-line max-params

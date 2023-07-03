@@ -10,10 +10,6 @@
       "path": "/_v/get-promotion",
       "public": true
     },
-    "getPromotionMassive": {
-      "path": "/_v/get-promotion-massive",
-      "public": true
-    },
     "postRegisterPurchase": {
       "path": "/_v/post-register-purchase",
       "public": true

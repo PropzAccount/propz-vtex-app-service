@@ -14,7 +14,6 @@ import { Clients } from './clients'
 import {
   PostPriceManual,
   getPromotion,
-  getPromotionMassive,
   postRegisterPurchase,
   postVerifyPurchase
 } from './handlers/propz'
@@ -67,10 +66,6 @@ export default new Service<Clients, State, ParamsContext>({
       GET: [getPromotion],
     }),
     
-    getPromotionMassive: method({
-      GET: [getPromotionMassive],
-    }),
-
     postRegisterPurchase: method({
       "POST": [postRegisterPurchase]
     }),
