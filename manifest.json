@@ -84,7 +84,7 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "mcloud.propzmedia.com",
+        "host": "propzcloud.pzm.in",
         "path": "/*"
       }
     },

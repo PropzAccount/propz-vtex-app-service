@@ -65,7 +65,7 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                    categoryId: vtexData.categoryId,
                    priceRange: {
                      sellingPrice: {
-                       highPrice: AvailableQuantity > 0 ? finalPricePropz(propzItem.promotion, PriceWithoutDiscount) : 0,
+                       highPrice:  AvailableQuantity > 0 ? finalPricePropz(propzItem.promotion, PriceWithoutDiscount) : 0,
                        lowPrice: AvailableQuantity > 0 ? finalPricePropz(propzItem.promotion, PriceWithoutDiscount) : 0,
                        __typename: 'PriceRange',
                      },
@@ -153,8 +153,11 @@ export async function getPromotionMassive (ctx: Context, next: () => Promise<any
             const [ vtexData ] = await Vtex.getSkuAndContext(account,  product)
 
             const productRefVtex = vtexData.items[0].referenceId[0].Value
+
             const { PriceWithoutDiscount, AvailableQuantity} = vtexData.items[0].sellers[0].commertialOffer
-    
+
+            console.log(AvailableQuantity)
+
             if(productRefVtex === product){
               return {
                    productId: vtexData.productId,
@@ -169,8 +172,8 @@ export async function getPromotionMassive (ctx: Context, next: () => Promise<any
                    categoryId: vtexData.categoryId,
                    priceRange: {
                      sellingPrice: {
-                      highPrice:  AvailableQuantity > 0 ? finalPricePropz(propzItem.promotion, PriceWithoutDiscount) : 0,,
-                      lowPrice:  AvailableQuantity > 0 ? finalPricePropz(propzItem.promotion, PriceWithoutDiscount) : 0,,
+                      highPrice:  AvailableQuantity > 0 ? finalPricePropz(propzItem.promotion, PriceWithoutDiscount) : 0,
+                      lowPrice:  AvailableQuantity > 0 ? finalPricePropz(propzItem.promotion, PriceWithoutDiscount) : 0,
                        __typename: 'PriceRange',
                      },
                      listPrice: {
@@ -242,13 +245,62 @@ export async function postVerifyPurchase(
     ctx.body = err
   }
 
-  try {
-    const data = await json(ctx.req)
+  const formatPrice = (price: any) => {
+    let value: string = price
+
+    value += '';
+
+    value = value.replace(/[\D]+/g,'');
+    value += '';
+    value = value.replace(/([0-9]{2})$/g, ".$1");
   
+    if (value.length > 6) {
+      value = value.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+    }
+
+    return value
+  }
+
+  try {
+    const {orderForm, document} = await json(ctx.req)
+
+    const itens = orderForm.items.map((item:any,index:any)=>{
+      return {
+        "itemId": `${index}`,
+        "ean": item.ean, 
+        "unitPrice": Number(formatPrice(item.sellingPrice)),
+        "unitSize": "Unit",
+        "quantity": item.quantity,
+        "blockUpdate": 0 
+      }
+    })
+
+   const data = {
+      
+          "sessionId": `${orderForm.orderFormId}1234`, 
+          "customer": {
+            "customerId": document
+          },
+          "ticket": {
+            "ticketId": orderForm.orderFormId, 
+            "storeId": "3", 
+            "posId": "1", 
+            "employeeId": null,
+            "amount": Number(formatPrice(orderForm.totalizers[0].value)), 
+            "date": "2019-03-18T11:33:23.801Z", 
+            "blockUpdate": 0, 
+            "items": itens
+          }
+        
+      }
+  
+      console.log(data,itens)
     const response = await Propz.postVerifyPurchase(domain, token, username, password, data)
   
+      console.log(response)
+
     ctx.status = 200
-    ctx.body = response
+    ctx.body = 'response'
   } catch (error) {
     ctx.status = 400
     ctx.body = error
@@ -299,130 +351,197 @@ export async function postRegisterPurchase(
 }
 
 
-export async function PostPriceManual(ctx: Context, next: () => Promise<any>){
-  const {
-    clients: { Propz, Vtex,  apps },
-    vtex: {
-      account
-    }
-  } = ctx
+export async function PostPriceManual(){
+// ctx: Context, next: () => Promise<any>
+  return null
+//   const {
+//     clients: { Propz, Vtex,  apps },
+//     vtex: {
+//       account
+//     }
+//   } = ctx
 
-  const err = {
-    success: false,
-    message: 'fill in all fields within the admin',
-  }
+//   const err = {
+//     success: false,
+//     message: 'fill in all fields within the admin',
+//   }
 
-  const app: string = getAppId()
-  const { domain, token, username, password, appKey, appToken } = await apps.getAppSettings(app)
+//   const app: string = getAppId()
+//   const { domain, token, username, password, appKey, appToken } = await apps.getAppSettings(app)
 
-  const validation = await Propz.checkFields([domain, token, username, password, appKey, appToken])
+//   const validation = await Propz.checkFields([domain, token, username, password, appKey, appToken])
+
+//   if (!validation) {
+//     ctx.status = 400
+//     ctx.body = err
+//   }
 
 
-  if (!validation) {
-    ctx.status = 400
-    ctx.body = err
-  }
+//   const data = await json(ctx.req)
 
-  const data = await json(ctx.req)
-  const { orderFormId, document, items } = data 
+//   const { orderForm, document } = data 
 
-  const formatPrice = (price: any) => {
-    let value: string = price
+//   const formatPrice = (price: any) => {
+//     let value: string = price
 
-    value += '';
+//     value += '';
 
-    value = value.replace(/[\D]+/g,'');
-    value += '';
-    value = value.replace(/([0-9]{2})$/g, ".$1");
+//     value = value.replace(/[\D]+/g,'');
+//     value += '';
+//     value = value.replace(/([0-9]{2})$/g, ".$1");
   
-    if (value.length > 6) {
-      value = value.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-    }
+//     if (value.length > 6) {
+//       value = value.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+//     }
 
-    return value
-  }
+//     return value
+//   }
 
-  const processPromotionData = async (response: any) => {
-    const responseGetOrderFormConfiguration = await Vtex.getOrderFormConfiguration(account, appKey, appToken)
 
-    try {
-      await Promise.all(response.items.map(async (propzItem: Items ) => {
+//   const processPromotionData = async (response: any) => {
+//     const responseGetOrderFormConfiguration = await Vtex.getOrderFormConfiguration(account, appKey, appToken)
+
+//     try {
+//       await Promise.all(response.items.map(async (propzItem: Items ) => {
     
-        if(propzItem.active && propzItem.promotion.active){
+//         if(propzItem.active && propzItem.promotion.active){
   
-          if(responseGetOrderFormConfiguration){
-            await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
-              ...responseGetOrderFormConfiguration,
-              allowManualPrice: true
-            })
+//           if(responseGetOrderFormConfiguration){
+//             await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
+//               ...responseGetOrderFormConfiguration,
+//               allowManualPrice: true
+//             })
   
-            const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION.split(',')
+//             const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION.split(',')
   
-            const producsVtex = await Promise.all(PRODUCTS_IDS_INCLUSIONS.map(async(product: string) => {
+//             const producsVtex = await Promise.all(PRODUCTS_IDS_INCLUSIONS.map(async(product: string) => {
   
-              items.map(async(item: any, index: number) => {
-                if(item.productRefId === product){
+//               items.map(async(item: any, index: number) => {
+//                 if(item.productRefId === product){
   
-                  const PriceWithoutDiscount = formatPrice(item.price)
-                  const price = finalPricePropz(propzItem.promotion, PriceWithoutDiscount)
-                  const priceFinal = price && String(price.toFixed(2)).replace(/[^\d]+/g,'')
+//                   const PriceWithoutDiscount = formatPrice(item.price)
+//                   const price = finalPricePropz(propzItem.promotion, PriceWithoutDiscount)
+//                   const priceFinal = price && String(price.toFixed(2)).replace(/[^\d]+/g,'')
 
-                  await Vtex.putPrice(account, appKey, appToken, orderFormId, String(index), Number(priceFinal))
-                }
+//                   await Vtex.putPrice(account, appKey, appToken, orderForm.orderFormId, String(index), Number(priceFinal))
+//                 }
   
-                return item
-              })
+//                 return item
+//               })
           
-              return product
+//               return product
     
-            }))
+//             }))
              
-            return producsVtex
-          }
+//             return producsVtex
+//           }
   
-        }
+//         }
   
-        return propzItem
+//         return propzItem
   
-      }))
+//       }))
       
 
-    } catch (error) {
-      ctx.status = 400
-      ctx.body = error
-    }
+//     } catch (error) {
+//       ctx.status = 400
+//       ctx.body = error
+//     }
 
-    await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
-      ...responseGetOrderFormConfiguration,
-      allowManualPrice: false
-    })
+//     await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
+//       ...responseGetOrderFormConfiguration,
+//       allowManualPrice: false
+//     })
 
-    const getOrderForm = await Vtex.getOrderForm(account, orderFormId)
+//     const getOrderForm = await Vtex.getOrderForm(account, orderFormId)
 
-    return getOrderForm.items
-  }
+//     return getOrderForm.items
+//   }
 
-  try {
-    const responsePromotionPropz = await Propz.getPromotion(domain, token, document, username, password)
 
-    if(responsePromotionPropz.items.length < 0){
-      const responsePromotionMassivePropz = await Propz.getPromotionMassive(domain, token, document, username, password)
-      const itemsOrderForm = await processPromotionData(responsePromotionMassivePropz)
 
-      ctx.status = 200
-      ctx.body = itemsOrderForm
-    } else {
-      const itemsOrderForm = await processPromotionData(responsePromotionPropz)
+//   try {
+//     const itens = orderForm.items.map((item:any,index:any)=>{
+//           return {
+//             "itemId": index, // index do orderForm
+//             "ean": item.ean, 
+//             "unitPrice": formatPrice(item.sellingPrice),
+//             "unitSize": "Unit",
+//             "quantity": item.quantity,
+//             "blockUpdate": 0 // manter 0 
+//           }
+//     })
+ 
+// console.log(itens)
+//     // const dataVerifyPurchase = {
+      
+//     //     "sessionId": orderForm.orderFormId, // orderformID
+//     //     "customer": {
+//     //       "customerId": document
+//     //     },
+//     //     "ticket": {
+//     //       "ticketId": orderForm.orderFormId, // orderformID
+//     //       "storeId": "3", 
+//     //       "posId": "1", 
+//     //       "employeeId": null,
+//     //       "amount": 1, // valor total da venda sem frete
+//     //       "date": "2019-03-18T11:33:23.801Z", // data atual
+//     //       "blockUpdate": 0, // manter 0 
+//     //       "items": [
+//     //         {
+//     //           "itemId": "1", // index do orderForm
+//     //           "ean": "1000000003420",
+//     //           "unitPrice": 6.99,
+//     //           "unitSize": "Unit",
+//     //           "quantity": 1,
+//     //           "blockUpdate": 0 // manter 0 
+//     //         },
+//     //         {
+//     //           "itemId": "2",
+//     //           "ean": "7896015516185",
+//     //           "unitPrice": 9.2,
+//     //           "unitSize": "Unit",
+//     //           "quantity": 10,
+//     //           "blockUpdate": 0
+//     //         },
+//     //         {
+//     //           "itemId": "3",
+//     //           "ean": "7896015516177",
+//     //           "unitPrice": 15.99,
+//     //           "unitSize": "Unit",
+//     //           "quantity": 2,
+//     //           "blockUpdate": 0
+//     //         }
+//     //       ]
+//     //     }
+      
+//     // }
 
-      ctx.status = 200
-      ctx.body = itemsOrderForm
-    }
+
+//     // const responsePromotionPropz = await Propz.getPromotion(domain, token, document, username, password)
+//     const responsePromotionPropz:any = await Propz.postVerifyPurchase(domain, token, document, username, password)
+    
+
+
+//     if(responsePromotionPropz.items.length < 0){
+//       const responsePromotionMassivePropz = await Propz.getPromotionMassive(domain, token, document, username, password)
+//       const itemsOrderForm = await processPromotionData(responsePromotionMassivePropz)
+
+//       ctx.status = 200
+//       ctx.body = itemsOrderForm
+//     } else {
+//       const itemsOrderForm = await processPromotionData(responsePromotionPropz)
+
+//       ctx.status = 200
+//       ctx.body = itemsOrderForm
+//     }
   
-  } catch (error) {
-    ctx.status = 400
-    ctx.body = error
-  }
+//   } catch (error) {
+//     ctx.status = 400
+//     ctx.body = error
+
+//   }
   
-  ctx.set('cache-control', 'no-cache')
-  next()  
+//   ctx.set('cache-control', 'no-cache')
+//   next()  
 }

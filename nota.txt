@@ -1,0 +1,6 @@
+usar promotion showcase  na shelf
+https://docs.propz.com.br/br/propz-api#tag/Promotional-Showcase/paths/~1retail~1promotion-showcase~1%7BcustomerId%7D~1/get
+
+
+Ao chegar na pdp o preco fica normal.
+
