@@ -58,7 +58,7 @@ export default class PropzClient extends ExternalClient {
   public async postVerifyPurchase(domain: string, token: string, username: string, password: string, itemsCart: any) {
       const auth = this.getAuthHeader(username, password);
 
-      return this.http.postRaw(
+      return this.http.post(
         `https://${domain}/v1/databases/${token}/retail/pos/verify-purchase/v2`, JSON.stringify(itemsCart) ,{
             metric: 'postVerifyPurchase',
             headers: {
@@ -73,13 +73,11 @@ export default class PropzClient extends ExternalClient {
     const auth = this.getAuthHeader(username, password);
 
       return this.http.post(
-        `http://${domain}/v1/databases/${token}/retail/pos/register-purchase/v2`, JSON.stringify(itemsCart), {
+        `https://${domain}/v1/databases/${token}/retail/pos/register-purchase/v2`, JSON.stringify(itemsCart), {
+          metric: 'postRegisterPurchase',
           headers: {
-            metric: 'postRegisterPurchase',
-            headers: {
-              Authorization: auth,
-              'Content-Type': 'application/json',
-            },
+            Authorization: auth,
+            'Content-Type': 'application/json'
           }
       })
   }

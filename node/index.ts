@@ -12,7 +12,6 @@ import {
 
 import { Clients } from './clients'
 import {
-  PostPriceManual,
   getPromotion,
   postRegisterPurchase,
   postVerifyPurchase
@@ -72,9 +71,6 @@ export default new Service<Clients, State, ParamsContext>({
 
     postVerifyPurchase: method({
       "POST": [postVerifyPurchase]
-    }),
-    postPriceManual: method({
-      "POST": [PostPriceManual]
     })
   },
 })

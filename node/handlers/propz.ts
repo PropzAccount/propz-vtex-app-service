@@ -6,6 +6,7 @@ import { json } from 'co-body'
 // eslint-disable-next-line prettier/prettier
 import type { Items } from '../types/Items'
 import { finalPricePropz } from '../utils/finalPricePropz'
+import { formatPrice } from '../utils/formatPriceVtex'
 
 const getAppId = (): string => {
   return process.env.VTEX_APP_ID ?? ''
@@ -20,7 +21,7 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
   } = ctx
 
 
-  const app: string = getAppId()
+  const app = getAppId()
   const { domain, token, username, password } = await apps.getAppSettings(app)
 
   const { query } = ctx.request
@@ -125,11 +126,14 @@ export async function postVerifyPurchase(
   next: () => Promise<any>
 ) {
   const {
-    clients: { Propz, apps },
+    clients: { Propz, Vtex, apps },
+    vtex: {
+      account
+    }
   } = ctx
  
   const app: string = getAppId()
-  const { domain, token, username, password } = await apps.getAppSettings(app)
+  const { domain, token, username, password, appKey, appToken } = await apps.getAppSettings(app)
 
   const validation = await Propz.checkFields([domain, token, username, password])
 
@@ -144,19 +148,117 @@ export async function postVerifyPurchase(
   }
 
   try {
-    const data = await json(ctx.req)
+    const { document, orderForm } = await json(ctx.req)
+    
+    const itemsTickeks = orderForm.items.map(
+      (item: { sellingPrice: number, ean: string, quantity: number }, index: number) => {
+      return {
+        itemId: String(index),
+        ean: item.ean,
+        unitPrice: Number(formatPrice(item.sellingPrice)),
+        unitSize: "Unit",
+        quantity: item.quantity,
+        blockUpdate: 0
+      }
+    })
 
-    const response = await Propz.postVerifyPurchase(domain, token, username, password, data)
+    const verifyPurchase = {
+      sessionId: orderForm.userProfileId,
+      customer: {
+        customerId: document
+      },
+      ticket: {
+        ticketId: orderForm.userProfileId,
+        "storeId": "3", 
+        "posId": "1", 
+        "employeeId": null,
+        "amount": orderForm.totalizers[0].value, 
+        "date": new Date(), 
+        "blockUpdate": 0,
+        items: itemsTickeks
+      }
+    }
+
+    const response: any = await Propz.postVerifyPurchase(domain, token, username, password, verifyPurchase)
+    const responseGetOrderFormConfiguration = await Vtex.getOrderFormConfiguration(account, appKey, appToken)
+    const itemsCartWithPriceChange: any[] = []
+    
+    const data = await Promise.all(response.ticket.items.map(async (itemPropz: 
+    {discounts: Array<{unitPriceWithDiscount: number}>, itemId: string}) => {
   
-      console.log(response)
+        if(responseGetOrderFormConfiguration){
+          await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
+             ...responseGetOrderFormConfiguration,
+             allowManualPrice: true
+          })
+  
+          const priceOnlyNumber = String(itemPropz.discounts[0].unitPriceWithDiscount).replace(/[^\d]+/, '')
+          
+          try {
+           const responseVtex: any = await Vtex.putPrice(account, appKey, appToken, orderForm.orderFormId, itemPropz.itemId, Number(priceOnlyNumber))
 
-    ctx.status = 200
-    ctx.body = 'response'
+           responseVtex.items.map((item: any , index: number) => {
+            if(index === Number(itemPropz.itemId)){
+              itemsCartWithPriceChange.push(item)
+            }
+
+            return item
+           })
+          } catch (error) {
+            return error
+          }
+        }
+  
+        return itemPropz
+    }))
+      
+     await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
+       ...responseGetOrderFormConfiguration,
+       allowManualPrice: false
+     })
+
+
+     if(data){
+      const totalItems = orderForm.totalizers.map((totalize: { id: string , value: string}) => {
+        if(totalize.id === 'Items'){
+          totalize.value =  response.ticket.amountWithAllDiscount
+        }
+
+        return totalize
+      })
+
+      ctx.status = 200
+      ctx.body = {
+        orderForm: {
+          ...orderForm,
+          totalizers: totalItems,
+          items: itemsCartWithPriceChange
+        },
+        propzPromotions: {
+        sessionId: response.sessionId,
+		    customer: {
+		    	customerId: response.customer.customerId
+		    },
+		    ticket: {
+		    	ticketId: response.ticket.ticketId,
+		    	storeId: response.ticket.storeId,
+		    	posId: response.ticket.posId,
+		    	employeeId: response.ticket.employeeId,
+		    	amount: response.ticket.amount,
+		    	amountWithAllDiscount: response.ticket.amountWithAllDiscount,
+		    	ticketDiscounts: [],
+		    	date: response.ticket.date,
+		    	blockUpdate: response.ticket.blockUpdate,
+		    	items: response.ticket.items
+          }
+        }
+      }
+    }
+
   } catch (error) {
     ctx.status = 400
     ctx.body = error
   }
-
 
   ctx.set('cache-control', 'no-cache')
   await next()
@@ -201,203 +303,3 @@ export async function postRegisterPurchase(
   await next()
 }
 
-
-export async function PostPriceManual(){
-// ctx: Context, next: () => Promise<any>
-  return null
-//   const {
-//     clients: { Propz, Vtex,  apps },
-//     vtex: {
-//       account
-//     }
-//   } = ctx
-
-//   const err = {
-//     success: false,
-//     message: 'fill in all fields within the admin',
-//   }
-
-//   const app: string = getAppId()
-//   const { domain, token, username, password, appKey, appToken } = await apps.getAppSettings(app)
-
-//   const validation = await Propz.checkFields([domain, token, username, password, appKey, appToken])
-
-//   if (!validation) {
-//     ctx.status = 400
-//     ctx.body = err
-//   }
-
-
-//   const data = await json(ctx.req)
-
-//   const { orderForm, document } = data 
-
-//   const formatPrice = (price: any) => {
-//     let value: string = price
-
-//     value += '';
-
-//     value = value.replace(/[\D]+/g,'');
-//     value += '';
-//     value = value.replace(/([0-9]{2})$/g, ".$1");
-  
-//     if (value.length > 6) {
-//       value = value.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-//     }
-
-//     return value
-//   }
-
-
-//   const processPromotionData = async (response: any) => {
-//     const responseGetOrderFormConfiguration = await Vtex.getOrderFormConfiguration(account, appKey, appToken)
-
-//     try {
-//       await Promise.all(response.items.map(async (propzItem: Items ) => {
-    
-//         if(propzItem.active && propzItem.promotion.active){
-  
-//           if(responseGetOrderFormConfiguration){
-//             await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
-//               ...responseGetOrderFormConfiguration,
-//               allowManualPrice: true
-//             })
-  
-//             const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION.split(',')
-  
-//             const producsVtex = await Promise.all(PRODUCTS_IDS_INCLUSIONS.map(async(product: string) => {
-  
-//               items.map(async(item: any, index: number) => {
-//                 if(item.productRefId === product){
-  
-//                   const PriceWithoutDiscount = formatPrice(item.price)
-//                   const price = finalPricePropz(propzItem.promotion, PriceWithoutDiscount)
-//                   const priceFinal = price && String(price.toFixed(2)).replace(/[^\d]+/g,'')
-
-//                   await Vtex.putPrice(account, appKey, appToken, orderForm.orderFormId, String(index), Number(priceFinal))
-//                 }
-  
-//                 return item
-//               })
-          
-//               return product
-    
-//             }))
-             
-//             return producsVtex
-//           }
-  
-//         }
-  
-//         return propzItem
-  
-//       }))
-      
-
-//     } catch (error) {
-//       ctx.status = 400
-//       ctx.body = error
-//     }
-
-//     await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
-//       ...responseGetOrderFormConfiguration,
-//       allowManualPrice: false
-//     })
-
-//     const getOrderForm = await Vtex.getOrderForm(account, orderFormId)
-
-//     return getOrderForm.items
-//   }
-
-  try {
-    const responsePromotionPropz = await Propz.getPromotionShowCase(domain, token, document, username, password)
-
-    if(responsePromotionPropz.items.length < 0){
-      const responsePromotionMassivePropz = await Propz.getPromotionShowCase(domain, token, document, username, password)
-      const itemsOrderForm = await processPromotionData(responsePromotionMassivePropz)
-
-//   try {
-//     const itens = orderForm.items.map((item:any,index:any)=>{
-//           return {
-//             "itemId": index, // index do orderForm
-//             "ean": item.ean, 
-//             "unitPrice": formatPrice(item.sellingPrice),
-//             "unitSize": "Unit",
-//             "quantity": item.quantity,
-//             "blockUpdate": 0 // manter 0 
-//           }
-//     })
- 
-// console.log(itens)
-//     // const dataVerifyPurchase = {
-      
-//     //     "sessionId": orderForm.orderFormId, // orderformID
-//     //     "customer": {
-//     //       "customerId": document
-//     //     },
-//     //     "ticket": {
-//     //       "ticketId": orderForm.orderFormId, // orderformID
-//     //       "storeId": "3", 
-//     //       "posId": "1", 
-//     //       "employeeId": null,
-//     //       "amount": 1, // valor total da venda sem frete
-//     //       "date": "2019-03-18T11:33:23.801Z", // data atual
-//     //       "blockUpdate": 0, // manter 0 
-//     //       "items": [
-//     //         {
-//     //           "itemId": "1", // index do orderForm
-//     //           "ean": "1000000003420",
-//     //           "unitPrice": 6.99,
-//     //           "unitSize": "Unit",
-//     //           "quantity": 1,
-//     //           "blockUpdate": 0 // manter 0 
-//     //         },
-//     //         {
-//     //           "itemId": "2",
-//     //           "ean": "7896015516185",
-//     //           "unitPrice": 9.2,
-//     //           "unitSize": "Unit",
-//     //           "quantity": 10,
-//     //           "blockUpdate": 0
-//     //         },
-//     //         {
-//     //           "itemId": "3",
-//     //           "ean": "7896015516177",
-//     //           "unitPrice": 15.99,
-//     //           "unitSize": "Unit",
-//     //           "quantity": 2,
-//     //           "blockUpdate": 0
-//     //         }
-//     //       ]
-//     //     }
-      
-//     // }
-
-
-//     // const responsePromotionPropz = await Propz.getPromotion(domain, token, document, username, password)
-//     const responsePromotionPropz:any = await Propz.postVerifyPurchase(domain, token, document, username, password)
-    
-
-
-//     if(responsePromotionPropz.items.length < 0){
-//       const responsePromotionMassivePropz = await Propz.getPromotionMassive(domain, token, document, username, password)
-//       const itemsOrderForm = await processPromotionData(responsePromotionMassivePropz)
-
-//       ctx.status = 200
-//       ctx.body = itemsOrderForm
-//     } else {
-//       const itemsOrderForm = await processPromotionData(responsePromotionPropz)
-
-//       ctx.status = 200
-//       ctx.body = itemsOrderForm
-//     }
-  
-//   } catch (error) {
-//     ctx.status = 400
-//     ctx.body = error
-
-//   }
-  
-//   ctx.set('cache-control', 'no-cache')
-//   next()  
-}
