@@ -32,6 +32,22 @@
         "description": "Digite senha informada pela Propz",
         "type": "string"
       },
+      "typePromotion": {
+        "title": "Tipo de promoção",
+        "description": "Selecione o tipo de promoção",
+        "type": "string",
+        "enum": [
+          "PERSONALIZED",
+          "MASSIVE"
+        ],
+        "enumNames": [
+          "Personalizada",
+          "Personalizada/Massiva"
+        ],
+        "widget": {
+          "ui:widget": "radio"
+        }
+      },
       "storeId": {
         "title": "Store ID",
         "description": "ID da loja",
