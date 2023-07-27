@@ -6,6 +6,7 @@ export interface Items {
     discountAmount: number
     discountPercent: number
     finalPrice: number
+    promotionType: string
     properties: {
       PRODUCT_ID_INCLUSION: string
     }

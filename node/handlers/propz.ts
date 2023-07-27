@@ -6,7 +6,7 @@ import { json } from 'co-body'
 // eslint-disable-next-line prettier/prettier
 import type { Items } from '../types/Items'
 import { finalPricePropz } from '../utils/finalPricePropz'
-import { formatPrice } from '../utils/formatPriceVtex'
+// import { formatPrice } from '../utils/formatPriceVtex'
 
 const getAppId = (): string => {
   return process.env.VTEX_APP_ID ?? ''
@@ -22,11 +22,11 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
 
 
   const app = getAppId()
-  const { domain, token, username, password } = await apps.getAppSettings(app)
+  const { domain, token, username, password, typePromotion } = await apps.getAppSettings(app)
 
   const { query } = ctx.request
 
-  const validation = await Propz.checkFields([domain, token, username, password])
+  const validation = await Propz.checkFields([domain, token, username, password, typePromotion])
 
   const err = {
     success: false,
@@ -40,9 +40,10 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
 
   try {
     const processPromotionData = async (response: any) => {
-      const promotions = await Promise.all(response.items.map(async (propzItem: Items ) => {
-       
-        if(propzItem.active && propzItem.promotion.active){
+      const promotionFilteredOfTypePromotion = response.items.filter((item:{ promotion: { promotionType: string}}) => item.promotion.promotionType === typePromotion)
+
+      const promotions = await Promise.all(promotionFilteredOfTypePromotion.map(async (propzItem: Items ) => {
+        if(propzItem.active && propzItem.promotion.active ){
 
         const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION.split(',')
     
@@ -96,7 +97,7 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
           return producsVtex
         }
 
-        return propzItem
+     return propzItem   
 
       }))
 
@@ -108,6 +109,7 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
     }
     
     const responsePromotionPropz = await Propz.getPromotionShowCase(domain, token, query.document, username, password)
+  
     const data = await processPromotionData(responsePromotionPropz)
 
     ctx.status = 200
@@ -148,38 +150,40 @@ export async function postVerifyPurchase(
   }
 
   try {
-    const { document, orderForm } = await json(ctx.req)
+    const { orderForm, verifyPurchase } = await json(ctx.req)
+    // console.log(orderForm)
     
-    const itemsTickeks = orderForm.items.map(
-      (item: { sellingPrice: number, ean: string, quantity: number }, index: number) => {
-      return {
-        itemId: String(index),
-        ean: item.ean,
-        unitPrice: Number(formatPrice(item.sellingPrice)),
-        unitSize: "Unit",
-        quantity: item.quantity,
-        blockUpdate: 0
-      }
-    })
+    // const itemsTickeks = orderForm.items.map(
+    //   (item: { sellingPrice: number, ean: string, quantity: number }, index: number) => {
+    //   return {
+    //     itemId: String(index),
+    //     ean: item.ean,
+    //     unitPrice: Number(formatPrice(item.sellingPrice)),
+    //     unitSize: "Unit",
+    //     quantity: item.quantity,
+    //     blockUpdate: 0
+    //   }
+    // })
 
-    const verifyPurchase = {
-      sessionId: orderForm.userProfileId,
-      customer: {
-        customerId: document
-      },
-      ticket: {
-        ticketId: orderForm.userProfileId,
-        "storeId": "3", 
-        "posId": "1", 
-        "employeeId": null,
-        "amount": orderForm.totalizers[0].value, 
-        "date": new Date(), 
-        "blockUpdate": 0,
-        items: itemsTickeks
-      }
-    }
+    // const verifyPurchase = {
+    //   sessionId: orderForm.userProfileId,
+    //   customer: {
+    //     customerId: document
+    //   },
+    //   ticket: {
+    //     ticketId: orderForm.userProfileId,
+    //     "storeId": "3", 
+    //     "posId": "1", 
+    //     "employeeId": null,
+    //     "amount": orderForm.totalizers[0].value, 
+    //     "date": new Date(), 
+    //     "blockUpdate": 0,
+    //     items: itemsTickeks
+    //   }
+    // }
 
     const response: any = await Propz.postVerifyPurchase(domain, token, username, password, verifyPurchase)
+
     const responseGetOrderFormConfiguration = await Vtex.getOrderFormConfiguration(account, appKey, appToken)
     const itemsCartWithPriceChange: any[] = []
     
@@ -193,9 +197,9 @@ export async function postVerifyPurchase(
           })
   
           const priceOnlyNumber = String(itemPropz.discounts[0].unitPriceWithDiscount).replace(/[^\d]+/, '')
-          
+
           try {
-           const responseVtex: any = await Vtex.putPrice(account, appKey, appToken, orderForm.orderFormId, itemPropz.itemId, Number(priceOnlyNumber))
+           const responseVtex: any = await Vtex.putPrice(account, appKey, appToken, orderForm.id, itemPropz.itemId, Number(priceOnlyNumber))
 
            responseVtex.items.map((item: any , index: number) => {
             if(index === Number(itemPropz.itemId)){
@@ -217,23 +221,59 @@ export async function postVerifyPurchase(
        allowManualPrice: false
      })
 
-
+     
      if(data){
-      const totalItems = orderForm.totalizers.map((totalize: { id: string , value: string}) => {
-        if(totalize.id === 'Items'){
-          totalize.value =  response.ticket.amountWithAllDiscount
-        }
-
-        return totalize
-      })
+       // const totalItems = orderForm.totalizers.map((totalize: { id: string , value: string}) => {
+         //   if(totalize.id === 'Items'){
+           //     totalize.value =  response.ticket.amountWithAllDiscount
+           //   }
+           
+           //   return totalize
+           // })
+           
+           const newOrderForm = await Vtex.getOrderForm(account, orderForm.id)
+           
 
       ctx.status = 200
       ctx.body = {
-        orderForm: {
-          ...orderForm,
-          totalizers: totalItems,
-          items: itemsCartWithPriceChange
+        data: {
+          id: newOrderForm.orderFormId,
+          items: itemsCartWithPriceChange,
+          value: newOrderForm.value,
+          totalizers: newOrderForm.totalizers,
+          marketingData: newOrderForm.marketingData,
+          canEditData: newOrderForm.canEditData,
+          loggedIn: newOrderForm.loggedIn,
+          paymentData: {
+            paymentSystems: newOrderForm.paymentData.paymentSystems,
+            payments: newOrderForm.paymentData.payments,
+            installmentOptions: newOrderForm.paymentData.installmentOptions,
+            availableAccounts: newOrderForm.paymentData.availableAccounts,
+            isValid: true,
+            "__typename": "PaymentData"
+          },
+          messages: {
+            couponMessages: [],
+            generalMessages: [],
+            "__typename": "OrderFormMessages"
+          },
+        shipping: {
+          countries: ['BRA'],
+          availableAddresses: newOrderForm.shippingData.availableAddresses,
+          selectedAddress: newOrderForm.shippingData.selectedAddresses,
+          deliveryOptions: newOrderForm.shippingData.logisticsInfo[0].slas,
+          pickupOptions: newOrderForm.shippingData.pickupPoints,
+          isValid: true,
+          "__typename": "Shipping"
         },
+        userProfileId: newOrderForm.userProfileId,
+        userType: 'CALL_CENTER_OPERATOR',
+        clientProfileData: newOrderForm.clientProfileData,
+        clientPreferencesData: newOrderForm.clientPreferencesData,
+        allowManualPrice: false,
+        customData: null,
+        "__typename": "OrderForm"
+       },
         propzPromotions: {
         sessionId: response.sessionId,
 		    customer: {
