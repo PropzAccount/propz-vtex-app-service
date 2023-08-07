@@ -46,14 +46,14 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
         if(propzItem.active && propzItem.promotion.active ){
 
         const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION.split(',')
-    
+
          const producsVtex = await Promise.all(PRODUCTS_IDS_INCLUSIONS.map(async(product: string) => {
 
+          try {
             const [ vtexData ] = await Vtex.getSkuAndContext(account,  product)
 
             const productRefVtex = vtexData.items[0].referenceId[0].Value
             const { PriceWithoutDiscount, AvailableQuantity } = vtexData.items[0].sellers[0].commertialOffer
-
             const priceFinal = Number(finalPricePropz(propzItem.promotion, PriceWithoutDiscount).toFixed(2))
 
             if(productRefVtex === product && AvailableQuantity > 0){
@@ -91,6 +91,9 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
             }
 
             return product
+          } catch (error) {
+            return error            
+          }
 
           }))
 
@@ -151,68 +154,41 @@ export async function postVerifyPurchase(
 
   try {
     const { orderForm, verifyPurchase } = await json(ctx.req)
-    // console.log(orderForm)
-    
-    // const itemsTickeks = orderForm.items.map(
-    //   (item: { sellingPrice: number, ean: string, quantity: number }, index: number) => {
-    //   return {
-    //     itemId: String(index),
-    //     ean: item.ean,
-    //     unitPrice: Number(formatPrice(item.sellingPrice)),
-    //     unitSize: "Unit",
-    //     quantity: item.quantity,
-    //     blockUpdate: 0
-    //   }
-    // })
 
-    // const verifyPurchase = {
-    //   sessionId: orderForm.userProfileId,
-    //   customer: {
-    //     customerId: document
-    //   },
-    //   ticket: {
-    //     ticketId: orderForm.userProfileId,
-    //     "storeId": "3", 
-    //     "posId": "1", 
-    //     "employeeId": null,
-    //     "amount": orderForm.totalizers[0].value, 
-    //     "date": new Date(), 
-    //     "blockUpdate": 0,
-    //     items: itemsTickeks
-    //   }
-    // }
-
-    const response: any = await Propz.postVerifyPurchase(domain, token, username, password, verifyPurchase)
+    try {
+       const response: any = await Propz.postVerifyPurchase(domain, token, username, password, verifyPurchase)
 
     const responseGetOrderFormConfiguration = await Vtex.getOrderFormConfiguration(account, appKey, appToken)
-    const itemsCartWithPriceChange: any[] = []
+    let itemsCartWithPriceChange: any[] = []
+
+    await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
+      ...responseGetOrderFormConfiguration,
+      allowManualPrice: true
+   })
     
     const data = await Promise.all(response.ticket.items.map(async (itemPropz: 
     {discounts: Array<{unitPriceWithDiscount: number}>, itemId: string}) => {
-  
-        if(responseGetOrderFormConfiguration){
-          await Vtex.postOrderFormConfigurationPriceManual(account, appKey, appToken, {
-             ...responseGetOrderFormConfiguration,
-             allowManualPrice: true
-          })
-  
-          const priceOnlyNumber = String(itemPropz.discounts[0].unitPriceWithDiscount).replace(/[^\d]+/, '')
+      const price = Number(itemPropz.discounts[0].unitPriceWithDiscount).toFixed(2)
+      const priceFormated = String(price).replace(/[^\d]+/, '')
 
           try {
-           const responseVtex: any = await Vtex.putPrice(account, appKey, appToken, orderForm.id, itemPropz.itemId, Number(priceOnlyNumber))
+          await Vtex.putPrice(account, appKey, appToken, orderForm.id, itemPropz.itemId, Number(priceFormated))
 
-           responseVtex.items.map((item: any , index: number) => {
-            if(index === Number(itemPropz.itemId)){
-              itemsCartWithPriceChange.push(item)
+          itemsCartWithPriceChange = orderForm.items.map((orderFormItem: any, index: number) => {
+            if(Number(itemPropz.itemId) === index && !orderFormItem.manualPrice){
+              return {
+                ...orderFormItem,
+                manualPrice: Number(priceFormated)
+              }
             }
 
-            return item
+            return orderFormItem
            })
+         
           } catch (error) {
             return error
           }
-        }
-  
+        
         return itemPropz
     }))
       
@@ -223,56 +199,11 @@ export async function postVerifyPurchase(
 
      
      if(data){
-       // const totalItems = orderForm.totalizers.map((totalize: { id: string , value: string}) => {
-         //   if(totalize.id === 'Items'){
-           //     totalize.value =  response.ticket.amountWithAllDiscount
-           //   }
-           
-           //   return totalize
-           // })
-           
-           const newOrderForm = await Vtex.getOrderForm(account, orderForm.id)
-           
-
       ctx.status = 200
       ctx.body = {
         data: {
-          id: newOrderForm.orderFormId,
+        ...orderForm,
           items: itemsCartWithPriceChange,
-          value: newOrderForm.value,
-          totalizers: newOrderForm.totalizers,
-          marketingData: newOrderForm.marketingData,
-          canEditData: newOrderForm.canEditData,
-          loggedIn: newOrderForm.loggedIn,
-          paymentData: {
-            paymentSystems: newOrderForm.paymentData.paymentSystems,
-            payments: newOrderForm.paymentData.payments,
-            installmentOptions: newOrderForm.paymentData.installmentOptions,
-            availableAccounts: newOrderForm.paymentData.availableAccounts,
-            isValid: true,
-            "__typename": "PaymentData"
-          },
-          messages: {
-            couponMessages: [],
-            generalMessages: [],
-            "__typename": "OrderFormMessages"
-          },
-        shipping: {
-          countries: ['BRA'],
-          availableAddresses: newOrderForm.shippingData.availableAddresses,
-          selectedAddress: newOrderForm.shippingData.selectedAddresses,
-          deliveryOptions: newOrderForm.shippingData.logisticsInfo[0].slas,
-          pickupOptions: newOrderForm.shippingData.pickupPoints,
-          isValid: true,
-          "__typename": "Shipping"
-        },
-        userProfileId: newOrderForm.userProfileId,
-        userType: 'CALL_CENTER_OPERATOR',
-        clientProfileData: newOrderForm.clientProfileData,
-        clientPreferencesData: newOrderForm.clientPreferencesData,
-        allowManualPrice: false,
-        customData: null,
-        "__typename": "OrderForm"
        },
         propzPromotions: {
         sessionId: response.sessionId,
@@ -295,6 +226,11 @@ export async function postVerifyPurchase(
       }
     }
 
+    } catch (error) {
+      return error
+    }
+    
+   
   } catch (error) {
     ctx.status = 400
     ctx.body = error
@@ -325,13 +261,15 @@ export async function postRegisterPurchase(
   if (!validation) {
     ctx.status = 400
     ctx.body = err
+
+    return
   }
 
   try {
     const data = await json(ctx.req)
-  
+    
     const response = await Propz.postRegisterPurchase(domain, token, username, password, data)
-  
+    
     ctx.status = 200
     ctx.body = response
   } catch (error) {
