@@ -2,14 +2,14 @@
   "name": "propz-backend",
   "vendor": "lojasantoantonio",
   "version": "0.0.0",
-  "title": "Loja Santo Antonio Service",
+  "title": "Propz Service",
   "description": "This app provides an Admin Interface for the configurations and a integration to the Loja santo antonio services",
   "builders": {
     "node": "6.x",
     "docs": "0.x"
   },
   "settingsSchema": {
-    "title": "Loja santo antonio",
+    "title": "Propz",
     "type": "object",
     "properties": {
       "domain": {
@@ -51,11 +51,6 @@
       "storeId": {
         "title": "Store ID",
         "description": "ID da loja",
-        "type": "string"
-      },
-      "formUrl": {
-        "title": "Form Url",
-        "description": "Digite a URL do formulário de cadastro informada pela Propz",
         "type": "string"
       },
       "appKey": {
