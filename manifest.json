@@ -95,7 +95,7 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "{{domain}}",
+        "host": "pzmropzcloud.pzm.in",
         "path": "/*"
       }
     },
