@@ -95,7 +95,7 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "propzcloud.pzm.in",
+        "host": "{{domain}}",
         "path": "/*"
       }
     },
@@ -110,7 +110,7 @@
       "name": "outbound-access",
       "attrs": {
         "host": "api.vtex.com",
-        "path": "/{{account}}}/pricing/prices/*"
+        "path": "/{{account}}/pricing/prices/*"
       }
     },
     {
