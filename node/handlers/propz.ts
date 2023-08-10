@@ -118,7 +118,9 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
       return removeStringOfArrayObjectPromotions
     }
     
-    const responsePromotionPropz = await Propz.getPromotionShowCase(domain, token, query.document, username, password)
+    const document = query.document.replace(/[\.-]/g, "");
+
+    const responsePromotionPropz = await Propz.getPromotionShowCase(domain, token, document, username, password)
 
     const data = await processPromotionData(responsePromotionPropz)
 
