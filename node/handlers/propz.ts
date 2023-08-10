@@ -20,7 +20,6 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
     }
   } = ctx
 
-
   const app = getAppId()
   const { domain, token, username, password, typePromotion } = await apps.getAppSettings(app)
 
@@ -43,76 +42,84 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
       const promotionFilteredOfTypePromotion = response.items.filter((item:{ promotion: { promotionType: string}}) => item.promotion.promotionType === typePromotion)
 
       const promotions = await Promise.all(promotionFilteredOfTypePromotion.map(async (propzItem: Items ) => {
-        if(propzItem.active && propzItem.promotion.active ){
+        try {
+          if(propzItem.active && propzItem.promotion.active ){
 
-        const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION.split(',')
+          const PRODUCTS_IDS_INCLUSIONS = propzItem.promotion.properties.PRODUCT_ID_INCLUSION?.split(',')
 
-         const producsVtex = await Promise.all(PRODUCTS_IDS_INCLUSIONS.map(async(product: string) => {
+          if(PRODUCTS_IDS_INCLUSIONS){
 
-          try {
-            const [ vtexData ] = await Vtex.getSkuAndContext(account,  product)
-
+            const producsVtex = await Promise.all(PRODUCTS_IDS_INCLUSIONS.map(async(product: string) => {
+ 
+           const [ vtexData ] = await Vtex.getSkuAndContext(account,  product)
+           
+           if(vtexData){
+ 
             const productRefVtex = vtexData.items[0].referenceId[0].Value
             const { PriceWithoutDiscount, AvailableQuantity } = vtexData.items[0].sellers[0].commertialOffer
             const priceFinal = Number(finalPricePropz(propzItem.promotion, PriceWithoutDiscount).toFixed(2))
 
             if(productRefVtex === product && AvailableQuantity > 0){
-              return {
-                   productId: vtexData.productId,
-                   description: vtexData.description,
-                   productName: vtexData.productName,
-                   productReference: vtexData.productReference,
-                   linkText: vtexData.linkText,
-                   brand: vtexData.brand,
-                   brandId: vtexData.brandId,
-                   link: vtexData.link,
-                   categories: vtexData.categories,
-                   categoryId: vtexData.categoryId,
-                   priceRange: {
-                     sellingPrice: {
-                       highPrice: AvailableQuantity > 0 ? priceFinal : 0,
-                       lowPrice: AvailableQuantity > 0 ? priceFinal : 0,
-                       __typename: 'PriceRange',
-                     },
-                     listPrice: {
-                       highPrice: AvailableQuantity > 0 ? PriceWithoutDiscount : 0 ,
-                       lowPrice: AvailableQuantity > 0 ? PriceWithoutDiscount : 0,
-                       __typename: 'PriceRange',
-                     },
-                     __typename: 'ProductPriceRange',
-                   },
-                   productClusters: vtexData.productClusters,
-                   clusterHighlights: vtexData.clusterHighlights,
-                   __typename: 'Product',
-                   items: vtexData.items,
-                   rule: null,
-                   sku: vtexData.items[0],
-               }
+                 return {
+                      productId: vtexData.productId,
+                      description: vtexData.description,
+                      productName: vtexData.productName,
+                      productReference: vtexData.productReference,
+                      linkText: vtexData.linkText,
+                      brand: vtexData.brand,
+                      brandId: vtexData.brandId,
+                      link: vtexData.link,
+                      categories: vtexData.categories,
+                      categoryId: vtexData.categoryId,
+                      priceRange: {
+                        sellingPrice: {
+                          highPrice: AvailableQuantity > 0 ? priceFinal : 0,
+                          lowPrice: AvailableQuantity > 0 ? priceFinal : 0,
+                          __typename: 'PriceRange',
+                        },
+                        listPrice: {
+                          highPrice: AvailableQuantity > 0 ? PriceWithoutDiscount : 0 ,
+                          lowPrice: AvailableQuantity > 0 ? PriceWithoutDiscount : 0,
+                          __typename: 'PriceRange',
+                        },
+                        __typename: 'ProductPriceRange',
+                      },
+                      productClusters: vtexData.productClusters,
+                      clusterHighlights: vtexData.clusterHighlights,
+                      __typename: 'Product',
+                      items: vtexData.items,
+                      rule: null,
+                      sku: vtexData.items[0],
+                  }
             }
-
-            return product
-          } catch (error) {
-            return error            
+ 
+           }
+ 
+           return product
+           
+            }))
+         
+            return producsVtex
           }
-
-          }))
-
-          return producsVtex
         }
 
-     return propzItem   
+        return propzItem
+
+        } catch (error) {
+          return error            
+        }
 
       }))
-
+      
       const promotionReduced: any = promotions.reduce((acc: any, promotion) => acc.concat(promotion) , [])
 
-     const removeStringOfArrayObjectPromotions =  promotionReduced.filter((promotion: any) => typeof promotion !== 'string')
+      const removeStringOfArrayObjectPromotions = promotionReduced.filter((promotion: any) => typeof promotion !== 'string').filter((promotion: any) => promotion.productId)
 
       return removeStringOfArrayObjectPromotions
     }
     
     const responsePromotionPropz = await Propz.getPromotionShowCase(domain, token, query.document, username, password)
-  
+
     const data = await processPromotionData(responsePromotionPropz)
 
     ctx.status = 200
@@ -155,8 +162,7 @@ export async function postVerifyPurchase(
   try {
     const { orderForm, verifyPurchase } = await json(ctx.req)
 
-    try {
-       const response: any = await Propz.postVerifyPurchase(domain, token, username, password, verifyPurchase)
+    const response: any = await Propz.postVerifyPurchase(domain, token, username, password, verifyPurchase)
 
     const responseGetOrderFormConfiguration = await Vtex.getOrderFormConfiguration(account, appKey, appToken)
     let itemsCartWithPriceChange: any[] = []
@@ -227,14 +233,10 @@ export async function postVerifyPurchase(
     }
 
     } catch (error) {
-      return error
+      ctx.status = 400
+      ctx.body = error
     }
-    
-   
-  } catch (error) {
-    ctx.status = 400
-    ctx.body = error
-  }
+  
 
   ctx.set('cache-control', 'no-cache')
   await next()
