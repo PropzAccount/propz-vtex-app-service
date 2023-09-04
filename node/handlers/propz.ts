@@ -6,6 +6,7 @@ import { json } from 'co-body'
 import { finalPricePropz } from '../utils/finalPricePropz'
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { Items } from '../types/Items'
+import { getVerifyPurchase } from '../utils/getVerifyPurchase'
 
 const getAppId = (): string => {
   return process.env.VTEX_APP_ID ?? ''
@@ -205,116 +206,80 @@ export async function postVerifyPurchase(
   }
 
   try {
-    const { orderForm, verifyPurchase } = await json(ctx.req)
+    const { orderFormId, document, sessionId } = await json(ctx.req)
 
-    const response: any = await Propz.postVerifyPurchase(
-      domain,
-      token,
-      username,
-      password,
-      verifyPurchase
-    )
+    try {
+      const orderForm = await Vtex.getOrderForm(account, orderFormId)
 
-    const responseGetOrderFormConfiguration = await Vtex.getOrderFormConfiguration(
-      account,
-      appKey,
-      appToken
-    )
+      const verifyPurchase = getVerifyPurchase({
+        orderForm,
+        document,
+        sessionId,
+      })
 
-    let itemsCartWithPriceChange: any[] = []
+      if (verifyPurchase.ticket.items.length > 0) {
+        try {
+          const response: any = await Propz.postVerifyPurchase(
+            domain,
+            token,
+            username,
+            password,
+            verifyPurchase
+          )
 
-    await Vtex.postOrderFormConfigurationPriceManual(
-      account,
-      appKey,
-      appToken,
-      {
-        ...responseGetOrderFormConfiguration,
-        allowManualPrice: true,
-      }
-    )
+          response.ticket.items.map(
+            async (itemPropz: {
+              discounts: Array<{ unitPriceWithDiscount: number }>
+              itemId: string
+            }) => {
+              if (itemPropz.discounts.length > 0) {
+                const price = Number(
+                  itemPropz.discounts[0].unitPriceWithDiscount
+                ).toFixed(2)
 
-    const data = await Promise.all(
-      response.ticket.items.map(
-        async (itemPropz: {
-          discounts: Array<{ unitPriceWithDiscount: number }>
-          itemId: string
-        }) => {
-          const price = Number(
-            itemPropz.discounts[0].unitPriceWithDiscount
-          ).toFixed(2)
+                const priceFormated = String(price).replace(/[^\d]+/, '')
 
-          const priceFormated = String(price).replace(/[^\d]+/, '')
-
-          try {
-            await Vtex.putPrice(
-              account,
-              appKey,
-              appToken,
-              orderForm.id,
-              itemPropz.itemId,
-              Number(priceFormated)
-            )
-
-            itemsCartWithPriceChange = orderForm.items.map(
-              (orderFormItem: any, index: number) => {
-                if (
-                  Number(itemPropz.itemId) === index &&
-                  !orderFormItem.manualPrice
-                ) {
-                  return {
-                    ...orderFormItem,
-                    manualPrice: Number(priceFormated),
-                  }
+                try {
+                  await Vtex.putPrice(
+                    account,
+                    appKey,
+                    appToken,
+                    orderFormId,
+                    itemPropz.itemId,
+                    Number(priceFormated)
+                  )
+                } catch (error) {
+                  return error
                 }
-
-                return orderFormItem
               }
-            )
-          } catch (error) {
-            return error
+
+              return itemPropz
+            }
+          )
+
+          const promotionPurchase = response.ticket.items.filter(
+            (item: { discounts: [] }) => item.discounts.length > 0 && item
+          )
+
+          ctx.body = {
+            response: {
+              ...response,
+              ticket: {
+                ...response.ticket,
+                items: promotionPurchase,
+              },
+            },
           }
-
-          return itemPropz
+        } catch (error) {
+          ctx.body = error
         }
-      )
-    )
-
-    await Vtex.postOrderFormConfigurationPriceManual(
-      account,
-      appKey,
-      appToken,
-      {
-        ...responseGetOrderFormConfiguration,
-        allowManualPrice: false,
+      } else {
+        ctx.body = {
+          response: verifyPurchase,
+        }
       }
-    )
-
-    if (data) {
-      ctx.status = 200
-      ctx.body = {
-        data: {
-          ...orderForm,
-          items: itemsCartWithPriceChange,
-        },
-        propzPromotions: {
-          sessionId: response.sessionId,
-          customer: {
-            customerId: response.customer.customerId,
-          },
-          ticket: {
-            ticketId: response.ticket.ticketId,
-            storeId: response.ticket.storeId,
-            posId: response.ticket.posId,
-            employeeId: response.ticket.employeeId,
-            amount: response.ticket.amount,
-            amountWithAllDiscount: response.ticket.amountWithAllDiscount,
-            ticketDiscounts: [],
-            date: response.ticket.date,
-            blockUpdate: response.ticket.blockUpdate,
-            items: response.ticket.items,
-          },
-        },
-      }
+    } catch (error) {
+      ctx.body = error
     }
   } catch (error) {
     ctx.status = 400
