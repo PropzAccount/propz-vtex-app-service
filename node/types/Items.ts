@@ -11,6 +11,7 @@ export interface Items {
       PRODUCT_ID_INCLUSION: string
     }
   }
+  remainingMaxPerCustomer: number
 }
 
 // export interface MechanicProps {
