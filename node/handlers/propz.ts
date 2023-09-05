@@ -7,6 +7,7 @@ import { finalPricePropz } from '../utils/finalPricePropz'
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { Items } from '../types/Items'
 import { getVerifyPurchase } from '../utils/getVerifyPurchase'
+import { formatPrice } from '../utils/formatPriceVtex'
 
 const getAppId = (): string => {
   return process.env.VTEX_APP_ID ?? ''
@@ -55,14 +56,16 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
         for await (const productRefId of PRODUCTS_IDS_INCLUSIONS) {
           const [vtexData] = await Vtex.getSkuAndContext(account, productRefId)
 
-          const isAvailableQuantity =
-            vtexData &&
-            vtexData.items[0].sellers[0].commertialOffer.AvailableQuantity > 0
+          if (vtexData) {
+            const isAvailableQuantity =
+              vtexData &&
+              vtexData.items[0].sellers[0].commertialOffer.AvailableQuantity > 0
 
-          const productRefVtex = vtexData.items[0].referenceId[0].Value
+            const productRefVtex = vtexData?.items[0].referenceId[0].Value
 
-          if (productRefVtex === productRefId && isAvailableQuantity) {
-            return vtexData
+            if (productRefVtex === productRefId && isAvailableQuantity) {
+              return vtexData
+            }
           }
         }
       }
@@ -85,51 +88,70 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                 propzItem.promotion.properties.PRODUCT_ID_INCLUSION
               )
 
-              const {
-                PriceWithoutDiscount,
-              } = vtexData.items[0].sellers[0].commertialOffer
+              if (vtexData) {
+                const {
+                  PriceWithoutDiscount,
+                  Price,
+                  ListPrice,
+                } = vtexData.items[0].sellers[0].commertialOffer
 
-              const priceFinal = Number(
-                finalPricePropz(
-                  propzItem.promotion,
-                  PriceWithoutDiscount
-                ).toFixed(2)
-              )
+                const priceFinal = Number(
+                  finalPricePropz(
+                    propzItem.promotion,
+                    PriceWithoutDiscount
+                  ).toFixed(2)
+                )
 
-              return {
-                productId: vtexData.productId,
-                description: vtexData.description,
-                productName: vtexData.productName,
-                productReference: vtexData.productReference,
-                linkText: vtexData.linkText,
-                brand: vtexData.brand,
-                brandId: vtexData.brandId,
-                link: vtexData.link,
-                categories: vtexData.categories,
-                categoryId: vtexData.categoryId,
-                priceRange: {
-                  sellingPrice: {
-                    highPrice: priceFinal,
-                    lowPrice: priceFinal,
-                    __typename: 'PriceRange',
+                return {
+                  promotionMaxPerCustomer: {
+                    pricePropz: {
+                      sellingPrice: priceFinal,
+                      listPrice: PriceWithoutDiscount,
+                    },
+                    priceVtex: {
+                      sellingPrice: Price,
+                      listPrice: ListPrice,
+                    },
+                    maxItems:
+                      propzItem.remainingMaxPerCustomer > 0
+                        ? propzItem.remainingMaxPerCustomer
+                        : 'full-promotion',
+                    product: vtexData.items[0].referenceId[0].Value,
                   },
-                  listPrice: {
-                    highPrice: PriceWithoutDiscount,
-                    lowPrice: PriceWithoutDiscount,
-                    __typename: 'PriceRange',
+                  product: {
+                    productId: vtexData.productId,
+                    description: vtexData.description,
+                    productName: vtexData.productName,
+                    productReference: vtexData.productReference,
+                    linkText: vtexData.linkText,
+                    brand: vtexData.brand,
+                    brandId: vtexData.brandId,
+                    link: vtexData.link,
+                    categories: vtexData.categories,
+                    categoryId: vtexData.categoryId,
+                    priceRange: {
+                      sellingPrice: {
+                        highPrice: priceFinal,
+                        lowPrice: priceFinal,
+                        __typename: 'PriceRange',
+                      },
+                      listPrice: {
+                        highPrice: PriceWithoutDiscount,
+                        lowPrice: PriceWithoutDiscount,
+                        __typename: 'PriceRange',
+                      },
+                      __typename: 'ProductPriceRange',
+                    },
+                    productClusters: vtexData.productClusters,
+                    clusterHighlights: vtexData.clusterHighlights,
+                    __typename: 'Product',
+                    items: vtexData.items,
+                    rule: null,
+                    sku: vtexData.items[0],
                   },
-                  __typename: 'ProductPriceRange',
-                },
-                productClusters: vtexData.productClusters,
-                clusterHighlights: vtexData.clusterHighlights,
-                __typename: 'Product',
-                items: vtexData.items,
-                rule: null,
-                sku: vtexData.items[0],
+                }
               }
             }
-
-            return propzItem
           } catch (error) {
             return error
           }
@@ -137,15 +159,21 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
       )
 
       const promotionReduced: any = promotions.reduce(
-        (acc: any, promotion) => acc.concat(promotion),
-        []
+        (acc: any, promotion: any) => {
+          if (promotion) {
+            acc.promotionMaxPerCustomer.push(promotion.promotionMaxPerCustomer)
+            acc.products.push(promotion.product)
+          }
+
+          return acc
+        },
+        {
+          promotionMaxPerCustomer: [],
+          products: [],
+        }
       )
 
-      const removeStringOfArrayObjectPromotions = promotionReduced
-        .filter((promotion: any) => typeof promotion !== 'string')
-        .filter((promotion: any) => promotion.productId)
-
-      return removeStringOfArrayObjectPromotions
+      return promotionReduced
     }
 
     const responsePromotionPropz = await Propz.getPromotionShowCase(
@@ -217,7 +245,23 @@ export async function postVerifyPurchase(
         sessionId,
       })
 
+      const responseGetOrderFormConfiguration = await Vtex.getOrderFormConfiguration(
+        account,
+        appKey,
+        appToken
+      )
+
       if (verifyPurchase.ticket.items.length > 0) {
+        await Vtex.postOrderFormConfigurationPriceManual(
+          account,
+          appKey,
+          appToken,
+          {
+            ...responseGetOrderFormConfiguration,
+            allowManualPrice: true,
+          }
+        )
+
         try {
           const response: any = await Propz.postVerifyPurchase(
             domain,
@@ -266,6 +310,7 @@ export async function postVerifyPurchase(
               ...response,
               ticket: {
                 ...response.ticket,
+                amount: Number(formatPrice(response.ticket.amount)),
                 items: promotionPurchase,
               },
             },
@@ -273,6 +318,16 @@ export async function postVerifyPurchase(
         } catch (error) {
           ctx.body = error
         }
+
+        await Vtex.postOrderFormConfigurationPriceManual(
+          account,
+          appKey,
+          appToken,
+          {
+            ...responseGetOrderFormConfiguration,
+            allowManualPrice: false,
+          }
+        )
       } else {
         ctx.body = {
           response: verifyPurchase,
