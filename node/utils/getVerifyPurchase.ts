@@ -46,7 +46,7 @@ export const getVerifyPurchase = ({ orderForm, document, sessionId }: any) => {
         storeId: '3',
         posId: '1',
         employeeId: null,
-        amount: orderForm.totalizers[0].value,
+        amount: formatPrice(orderForm.totalizers[0].value),
         date: new Date(),
         blockUpdate: 0,
         items: itemsTickeks,
