@@ -9,7 +9,7 @@
     "@types/btoa": "^1.2.3",
     "@types/co-body": "^0.0.3",
     "@types/node": "12.x",
-    "@vtex/api": "6.45.19",
+    "@vtex/api": "6.45.20",
     "eslint": "^6.3.0",
     "eslint-config-vtex": "^11.0.0",
     "lojasantoantonio.propz-backend": "https://adriano--lojasantoantonio.myvtex.com/_v/private/typings/linked/v1/lojasantoantonio.propz-backend@0.0.0+build1685724550/public/_types/react",
