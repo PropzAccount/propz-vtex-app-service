@@ -197,6 +197,117 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
   await next()
 }
 
+export async function postPricePDP(ctx: Context, next: () => Promise<any>) {
+  const {
+    clients: { Propz, apps },
+  } = ctx
+
+  const app = getAppId()
+  const {
+    domain,
+    token,
+    username,
+    password,
+    typePromotion,
+  } = await apps.getAppSettings(app)
+
+  const validation = await Propz.checkFields([
+    domain,
+    token,
+    username,
+    password,
+    typePromotion,
+  ])
+
+  const err = {
+    success: false,
+    message: 'fill in all fields within the admin',
+  }
+
+  if (!validation) {
+    ctx.status = 400
+    ctx.body = err
+  }
+
+  const { document, product } = await json(ctx.req)
+
+  const responsePromotionPropz = await Propz.getPromotionShowCase(
+    domain,
+    token,
+    document,
+    username,
+    password
+  )
+
+  const price = responsePromotionPropz.items.reduce(
+    (acc: any, currerItem: any) => {
+      const { PRODUCT_ID_INCLUSION } = currerItem.promotion.properties
+
+      if (PRODUCT_ID_INCLUSION) {
+        const PRODUCTS_IDS_INCLUSIONS = PRODUCT_ID_INCLUSION.split(',')
+
+        PRODUCTS_IDS_INCLUSIONS.map((currentPromotion: any) => {
+          if (currentPromotion === product.productReference) {
+            const {
+              PriceWithoutDiscount,
+            } = product.items[0].sellers[0].commertialOffer
+
+            const priceFinal = Number(
+              finalPricePropz(
+                currerItem.promotion,
+                PriceWithoutDiscount
+              ).toFixed(2)
+            )
+
+            acc = {
+              sellingPrice: priceFinal,
+              listPrice: PriceWithoutDiscount,
+            }
+          }
+
+          return currentPromotion
+        })
+      }
+
+      return acc
+    },
+    {
+      sellingPrice: 0,
+      listPrice: 0,
+    }
+  )
+
+  const sellingPrice =
+    price.sellingPrice > 0
+      ? price.sellingPrice
+      : product.priceRange.sellingPrice.highPrice
+
+  const listPrice =
+    price.listPrice > 0
+      ? price.listPrice
+      : product.priceRange.listPrice.highPrice
+
+  ctx.body = {
+    ...product,
+    priceRange: {
+      sellingPrice: {
+        highPrice: sellingPrice,
+        lowPrice: sellingPrice,
+        __typename: 'PriceRange',
+      },
+      listPrice: {
+        highPrice: listPrice,
+        lowPrice: listPrice,
+        __typename: 'PriceRange',
+      },
+      __typename: 'ProductPriceRange',
+    },
+  }
+
+  ctx.set('cache-control', 'no-cache')
+  await next()
+}
+
 export async function postVerifyPurchase(
   ctx: Context,
   next: () => Promise<any>

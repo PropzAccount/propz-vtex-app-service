@@ -10,6 +10,10 @@
       "path": "/_v/get-promotion",
       "public": true
     },
+    "postPricePDP": {
+      "path": "/_v/post-price-pdp",
+      "public": true
+    },
     "postRegisterPurchase": {
       "path": "/_v/post-register-purchase",
       "public": true
