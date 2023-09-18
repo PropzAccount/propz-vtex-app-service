@@ -7,6 +7,7 @@ export interface Items {
     discountPercent: number
     finalPrice: number
     promotionType: string
+    minQuantity: number
     properties: {
       PRODUCT_ID_INCLUSION: string
     }

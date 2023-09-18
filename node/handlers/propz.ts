@@ -117,6 +117,8 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                         ? propzItem.remainingMaxPerCustomer
                         : 'full-promotion',
                     product: vtexData.items[0].referenceId[0].Value,
+                    typeMechanic: propzItem.promotion.mechanic,
+                    quantityFlag: propzItem.promotion.minQuantity,
                   },
                   product: {
                     productId: vtexData.productId,
@@ -381,6 +383,8 @@ export async function postVerifyPurchase(
             password,
             verifyPurchase
           )
+
+          console.log(response)
 
           response.ticket.items.map(
             async (itemPropz: {
