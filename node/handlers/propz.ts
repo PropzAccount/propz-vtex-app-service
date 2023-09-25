@@ -384,8 +384,6 @@ export async function postVerifyPurchase(
             verifyPurchase
           )
 
-          console.log(response)
-
           response.ticket.items.map(
             async (itemPropz: {
               discounts: Array<{ unitPriceWithDiscount: number }>
