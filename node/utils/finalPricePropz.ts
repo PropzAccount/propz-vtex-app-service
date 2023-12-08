@@ -1,7 +1,6 @@
 export const finalPricePropz = (propsData: any, skuPrice: any) => {
   const { mechanic } = propsData
 
-  // console.log(mechanic)
   if (
     mechanic === 'reduced_price' ||
     mechanic === 'virtual_pack' ||

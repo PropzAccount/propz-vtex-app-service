@@ -1,6 +1,6 @@
 {
   "name": "propz-backend",
-  "vendor": "lojasantoantonio",
+  "vendor": "propzpartnerbr",
   "version": "0.0.0",
   "title": "Propz Service",
   "description": "This app provides an Admin Interface for the configurations and a integration to the Loja santo antonio services",
@@ -95,7 +95,7 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "pzmropzcloud.pzm.in",
+        "host": "propzcloud.pzm.in",
         "path": "/*"
       }
     },

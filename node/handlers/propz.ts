@@ -83,7 +83,11 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
       const promotions = await Promise.all(
         promotionFilteredOfTypePromotion.map(async (propzItem: Items) => {
           try {
-            if (propzItem.active && propzItem.promotion.active) {
+            if (
+              propzItem.active &&
+              propzItem.promotion.active &&
+              propzItem.promotion.requiresIdentification
+            ) {
               const vtexData = await processIdentifiers(
                 propzItem.promotion.properties.PRODUCT_ID_INCLUSION
               )
@@ -97,10 +101,12 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
 
                 const priceFinal = Number(
                   finalPricePropz(
-                    propzItem.promotion,
+                    propzItem?.promotion,
                     PriceWithoutDiscount
                   ).toFixed(2)
                 )
+
+                console.log(priceFinal)
 
                 return {
                   promotionMaxPerCustomer: {

@@ -11,6 +11,7 @@ export interface Items {
     properties: {
       PRODUCT_ID_INCLUSION: string
     }
+    requiresIdentification: boolean
   }
   remainingMaxPerCustomer: number
 }
