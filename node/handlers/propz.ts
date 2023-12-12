@@ -8,6 +8,7 @@ import { finalPricePropz } from '../utils/finalPricePropz'
 import { Items } from '../types/Items'
 import { getVerifyPurchase } from '../utils/getVerifyPurchase'
 import { formatPrice } from '../utils/formatPriceVtex'
+import { AxiosError } from 'axios'
 
 const getAppId = (): string => {
   return process.env.VTEX_APP_ID ?? ''
@@ -26,6 +27,7 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
     username,
     password,
     typePromotion,
+    storeId,
   } = await apps.getAppSettings(app)
 
   const { query } = ctx.request
@@ -36,6 +38,7 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
     username,
     password,
     typePromotion,
+    storeId,
   ])
 
   const err = {
@@ -99,14 +102,17 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                   ListPrice,
                 } = vtexData.items[0].sellers[0].commertialOffer
 
+                const clusterHighlights =
+                  Object.keys(vtexData.clusterHighlights).length > 0
+                    ? vtexData.clusterHighlights
+                    : []
+                console.log(vtexData)
                 const priceFinal = Number(
                   finalPricePropz(
                     propzItem?.promotion,
                     PriceWithoutDiscount
                   ).toFixed(2)
                 )
-
-                console.log(priceFinal)
 
                 return {
                   promotionMaxPerCustomer: {
@@ -151,11 +157,50 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                       __typename: 'ProductPriceRange',
                     },
                     productClusters: vtexData.productClusters,
-                    clusterHighlights: vtexData.clusterHighlights,
+                    clusterHighlights,
+                    skuSpecifications: [],
+                    specificationGroups: [],
                     __typename: 'Product',
-                    items: vtexData.items,
+                    items: [
+                      {
+                        ...vtexData.items[0],
+                        sellers: [
+                          {
+                            ...vtexData.items[0].sellers[0],
+                            commertialOffer: {
+                              ...vtexData.items[0].sellers[0].commertialOffer,
+                              ListPrice: PriceWithoutDiscount,
+                              PriceWithoutDiscount,
+                              Price: priceFinal,
+                              spotPrice:
+                                priceFinal < PriceWithoutDiscount
+                                  ? priceFinal
+                                  : PriceWithoutDiscount,
+                            },
+                          },
+                        ],
+                      },
+                    ],
                     rule: null,
-                    sku: vtexData.items[0],
+                    sku: {
+                      ...vtexData.items[0],
+                      sellers: [
+                        {
+                          ...vtexData.items[0].sellers[0],
+                          commertialOffer: {
+                            ...vtexData.items[0].sellers[0].commertialOffer,
+                            ListPrice: PriceWithoutDiscount,
+                            PriceWithoutDiscount,
+                            Price: priceFinal,
+                            spotPrice:
+                              priceFinal < PriceWithoutDiscount
+                                ? priceFinal
+                                : PriceWithoutDiscount,
+                          },
+                        },
+                      ],
+                      variations: [],
+                    },
                   },
                 }
               }
@@ -189,7 +234,8 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
       token,
       query.document,
       username,
-      password
+      password,
+      storeId
     )
 
     const data = await processPromotionData(responsePromotionPropz)
@@ -217,6 +263,7 @@ export async function postPricePDP(ctx: Context, next: () => Promise<any>) {
     username,
     password,
     typePromotion,
+    storeId,
   } = await apps.getAppSettings(app)
 
   const validation = await Propz.checkFields([
@@ -244,7 +291,8 @@ export async function postPricePDP(ctx: Context, next: () => Promise<any>) {
     token,
     document,
     username,
-    password
+    password,
+    storeId
   )
 
   const price = responsePromotionPropz.items.reduce(
@@ -371,15 +419,20 @@ export async function postVerifyPurchase(
       )
 
       if (verifyPurchase.ticket.items.length > 0) {
-        await Vtex.postOrderFormConfigurationPriceManual(
-          account,
-          appKey,
-          appToken,
-          {
-            ...responseGetOrderFormConfiguration,
-            allowManualPrice: true,
-          }
-        )
+        try {
+          await Vtex.postOrderFormConfigurationPriceManual(
+            account,
+            appKey,
+            appToken,
+            {
+              ...responseGetOrderFormConfiguration,
+              allowManualPrice: true,
+            }
+          )
+        } catch (error) {
+          const err = error as AxiosError
+          console.log(err.response?.data)
+        }
 
         try {
           const response: any = await Propz.postVerifyPurchase(
