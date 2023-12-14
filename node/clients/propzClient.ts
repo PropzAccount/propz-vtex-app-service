@@ -39,7 +39,7 @@ export default class PropzClient extends ExternalClient {
 
     try {
       return this.http.get(
-        `https://${domain}/v1/databases/${token}/retail/promotion-showcase/${document}?channel=ecom&store=${storeId}`,
+        `https://${domain}/v1/databases/${token}/retail/promotion-showcase/${document}?channel=ecom&storeId=${storeId}`,
         {
           metric: 'getPromotionShowcase',
           nullIfNotFound: true,
