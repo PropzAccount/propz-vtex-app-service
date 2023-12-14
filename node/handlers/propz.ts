@@ -3,8 +3,8 @@
 
 import { json } from 'co-body'
 
-import { finalPricePropz } from '../utils/finalPricePropz'
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { finalPricePropz } from '../utils/finalPricePropz'
 import { Items } from '../types/Items'
 import { getVerifyPurchase } from '../utils/getVerifyPurchase'
 import { formatPrice } from '../utils/formatPriceVtex'
