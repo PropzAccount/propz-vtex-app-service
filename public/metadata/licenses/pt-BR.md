@@ -1,70 +1,70 @@
-### Termos de uso e privacidade do MAEZTRA PROPZ OFFER
+### Termos de uso e privacidade do PROPZ SERVICE APP
 
 #### Última modificação: 03 de agosto de 2021
 
 ### 1. ACEITAÇÃO DOS TERMOS
 
-A aceitação destes termos e condições é requisito necessário e indispensável para a utilização do MAEZTRA PROPZ OFFER e seus serviços.
-Ao clicar no botão que indica a sua aceitação, você declara que está de acordo com este Termo e com o uso do MAEZTRA PROPZ OFFER, nas condições em que se encontra.
-Se você utilizar o MAEZTRA PROPZ OFFER em benefício de uma organização, empresa, ou sociedade, você concorda com este Termo em nome dessa organização, empresa ou sociedade, e declara que tem poderes para fazê-lo. Nesse caso, os pronomes "você" e "seu" se referirão à citada organização, empresa ou entidade. Você também declara, neste ato, possuir os necessários poderes para assumir as declarações previstas neste Termo.
+A aceitação destes termos e condições é requisito necessário e indispensável para a utilização do PROPZ SERVICE APP e seus serviços.
+Ao clicar no botão que indica a sua aceitação, você declara que está de acordo com este Termo e com o uso do PROPZ SERVICE APP, nas condições em que se encontra.
+Se você utilizar o PROPZ SERVICE APP em benefício de uma organização, empresa, ou sociedade, você concorda com este Termo em nome dessa organização, empresa ou sociedade, e declara que tem poderes para fazê-lo. Nesse caso, os pronomes "você" e "seu" se referirão à citada organização, empresa ou entidade. Você também declara, neste ato, possuir os necessários poderes para assumir as declarações previstas neste Termo.
 
-O MAEZTRA PROPZ OFFER poderá, sem prévio aviso, bloquear e cancelar o acesso ao aplicativo quando verificar que o usuário praticou algum ato ou mantenha conduta que (i) viole as leis e regulamentos federais, estaduais e/ou municipais, (ii) contrarie as regras destes Termos de Uso, ou (iii) viole os princípios da moral e dos bons costumes.
-Toda e qualquer ação executada ou conteúdo publicado por você durante o uso do aplicativo será de sua exclusiva e integral responsabilidade, devendo isentar e indenizar o MAEZTRA PROPZ OFFER e a MAEZTRA (proprietária exclusiva deste aplicativo) de quaisquer reclamações, prejuízos, perdas e danos causados à terceiros e à MAEZTRA, em decorrência de tais ações ou manifestações.
+O PROPZ SERVICE APP poderá, sem prévio aviso, bloquear e cancelar o acesso ao aplicativo quando verificar que o usuário praticou algum ato ou mantenha conduta que (i) viole as leis e regulamentos federais, estaduais e/ou municipais, (ii) contrarie as regras destes Termos de Uso, ou (iii) viole os princípios da moral e dos bons costumes.
+Toda e qualquer ação executada ou conteúdo publicado por você durante o uso do aplicativo será de sua exclusiva e integral responsabilidade, devendo isentar e indenizar o PROPZ SERVICE APP e a PROPZ (proprietária exclusiva deste aplicativo) de quaisquer reclamações, prejuízos, perdas e danos causados à terceiros e à PROPZ, em decorrência de tais ações ou manifestações.
 Sem prejuízo do disposto nestes Termos, o Usuário deverá observar todos os demais contratos, termos e condições que regulamentem a sua relação com o APP.
 
 ### 2. SERVIÇOS
 
-Para fins destes Termos, “Serviços” significarão a prestação de serviços pelo MAEZTRA PROZ OFFER que possibilitará a você o acesso a promoções e ofertas de fornecedores variados devidamente cadastrados na plataforma PROPZ.
+Para fins destes Termos, “Serviços” significarão a prestação de serviços pelo PROPZ SERVICE APP que possibilitará a você o acesso a promoções e ofertas de fornecedores variados devidamente cadastrados na plataforma PROPZ.
 
 Os Serviços oferecidos pelo MAZETRA PROZ OFFER se relacionam apenas à intermediação da envio de promoções e ofertas disponibilizada pela plataforma PROPZ.
 
 Poderá ser exibido, na Plataforma ou em nossos Serviços, alguns conteúdos que não sejam de nossa titularidade, os quais poderão ser revistos por nós para determinar sua legalidade e adequação às nossas políticas.
 
-O MAEZTRA PROZ OFFER poderá, a seu exclusivo critério, remover ou se recusar a exibir conteúdo na Plataforma que acredite estar violando as políticas ou legislação aplicável, sem a necessidade de notificação ou aviso prévio aos Usuários.
+O PROPZ SERVICE APP poderá, a seu exclusivo critério, remover ou se recusar a exibir conteúdo na Plataforma que acredite estar violando as políticas ou legislação aplicável, sem a necessidade de notificação ou aviso prévio aos Usuários.
 
 ### 3. ALTERAÇÕES AOS TERMOS DE USO
 
-A MAEZTRA poderá modificar, sem aviso prévio, estes Termos de Uso, cuja versão mais recente estará sempre disponível para consulta no próprio aplicativo.
+A PROPZ poderá modificar, sem aviso prévio, estes Termos de Uso, cuja versão mais recente estará sempre disponível para consulta no próprio aplicativo.
 
-Se você não concordar com alguma alteração feita neste Termo, recomendamos que deixe de utilizar o MAEZTRA PROPZ OFFER. Ao continuar utilizando o MAEZTRA PROPZ OFFER, você expressa a sua concordância em vincular-se aos termos atualizados.
+Se você não concordar com alguma alteração feita neste Termo, recomendamos que deixe de utilizar o PROPZ SERVICE APP. Ao continuar utilizando o PROPZ SERVICE APP, você expressa a sua concordância em vincular-se aos termos atualizados.
 
 ### 4. PRIVACIDADE
 
-Durante o uso do MAEZTRA PROPZ OFFER, você poderá ser solicitado a fornecer dados pessoais, entretanto antes de iniciar o uso do MAEZTRA PROPZ OFFER você será solicitado a declarar que concorda em fornecer tais dados, e também com a nossa Política de Privacidade e com o tratamento que daremos às suas informações.
+Durante o uso do PROPZ SERVICE APP, você poderá ser solicitado a fornecer dados pessoais, entretanto antes de iniciar o uso do PROPZ SERVICE APP você será solicitado a declarar que concorda em fornecer tais dados, e também com a nossa Política de Privacidade e com o tratamento que daremos às suas informações.
 
 A nossa política de tratamento de dados passa por constantes implementações visando atender às disposições da legislação brasileira de proteção de dados, inclusive a Lei 12.965/14 (Marco Civil da Internet) e a Lei 13.709/2018 (LGPD).
 
-Os dados pessoais são coletados estritamente para possibilitar a utilização do MAEZTRA PROPZ OFFER e direcionar melhorias e evoluções no aplicativo, bem como para realizar comunicações autorizadas pelo titular dos dados sobre informações do aplicativo, e não são compartilhados com terceiros.
+Os dados pessoais são coletados estritamente para possibilitar a utilização do PROPZ SERVICE APP e direcionar melhorias e evoluções no aplicativo, bem como para realizar comunicações autorizadas pelo titular dos dados sobre informações do aplicativo, e não são compartilhados com terceiros.
 
-Você declara que leu, está ciente e aceita o disposto na Política de Privacidade da MAEZTRA PROPZ OFFER, que constitui parte integrante dos presentes Termos, conforme disposto em sua integralidade no seguinte link: https://termo.maeztra.com/
+Você declara que leu, está ciente e aceita o disposto na Política de Privacidade da PROPZ SERVICE APP, que constitui parte integrante dos presentes Termos.
 
-Você concorda que as rotinas de acesso ao MAEZTRA PROPZ OFFER poderão ser gravadas e monitoradas pela equipe de desenvolvimento da MAEZTRA e que todas as informações e dados fornecidos poderão ser utilizados somente com o intuito de prover melhorias de performance, ajustes e correções de funcionalidade e aprimoramento do sistema como um todo. Estas informações não serão compartilhadas ou disponibilizadas para qualquer pessoa ou empresa que não seja do grupo MAEZTRA, tais como, mas não se restringindo a parceiros, prestadores de serviço, agências, consultores ou outros usuários.
+Você concorda que as rotinas de acesso ao PROPZ SERVICE APP poderão ser gravadas e monitoradas pela equipe de desenvolvimento da PROPZ e que todas as informações e dados fornecidos poderão ser utilizados somente com o intuito de prover melhorias de performance, ajustes e correções de funcionalidade e aprimoramento do sistema como um todo. Estas informações não serão compartilhadas ou disponibilizadas para qualquer pessoa ou empresa que não seja a Propz, tais como, mas não se restringindo a parceiros, prestadores de serviço, agências, consultores ou outros usuários.
 
-Você concorda que, quando aplicável, o MAEZTRA PROPZ OFFER será considerado Operador de Dados, disponibilizando apenas a infraestrutura. Em nenhuma hipótese o MAEZTRA PROPZ OFFER considerado Controlador de Dados Pessoais para fins de Lei de Proteção de Dados Pessoais.
+Você concorda que, quando aplicável, o PROPZ SERVICE APP será considerado Operador de Dados, disponibilizando apenas a infraestrutura. Em nenhuma hipótese o PROPZ SERVICE APP considerado Controlador de Dados Pessoais para fins de Lei de Proteção de Dados Pessoais.
 
-### 5. PROPRIEDADE INTELECTUAL DO MAEZTRA PROPZ OFFER
+### 5. PROPRIEDADE INTELECTUAL DO PROPZ SERVICE APP
 
-Este Termo, tampouco o uso do MAEZTRA PROPZ OFFER transfere a você a propriedade intelectual da plataforma ou do conteúdo que você terá acesso.
+Este Termo, tampouco o uso do PROPZ SERVICE APP transfere a você a propriedade intelectual da plataforma ou do conteúdo que você terá acesso.
 
-Este Termo não lhe outorga nenhum direito de usar as marcas registradas ou outros elementos distintivos do MAEZTRA PROPZ OFFER e da MAEZTRA. O uso indevido e desautorizado das marcas registradas ou outros elementos distintivos do MAEZTRA PROPZ OFFER e da MAEZTRA pode acarretar na suspensão ou encerramento da sua utilização do aplicativo e gera o dever de indenizar a MAEZTRA por danos morais e por perdas.
+Este Termo não lhe outorga nenhum direito de usar as marcas registradas ou outros elementos distintivos do PROPZ SERVICE APP e da PROPZ. O uso indevido e desautorizado das marcas registradas ou outros elementos distintivos do PROPZ SERVICE APP e da PROPZ pode acarretar na suspensão ou encerramento da sua utilização do aplicativo e gera o dever de indenizar a PROPZ por danos morais e por perdas.
 
-A MAEZTRA não se responsabiliza pela utilização, sem as devidas autorizações necessárias, incluindo aquelas relacionadas a questões de propriedade intelectual, do conteúdo retirado do aplicativo por terceiros, ficando, assim, isento de qualquer ação, pedido, reivindicação e/ou reclamação proposta em razão de tal uso indevido.
+A PROPZ não se responsabiliza pela utilização, sem as devidas autorizações necessárias, incluindo aquelas relacionadas a questões de propriedade intelectual, do conteúdo retirado do aplicativo por terceiros, ficando, assim, isento de qualquer ação, pedido, reivindicação e/ou reclamação proposta em razão de tal uso indevido.
 
 As referências a produtos, serviços, processos ou outras informações, designação comercial, marca registrada, fabricante, fornecedor ou qualquer outra forma de referência não constitui nem implica endosso, patrocínio ou recomendação por parte deste aplicativo.
 
 ### 6. CONTEÚDO DE USUÁRIOS
 
-Você declara e garante que todas as informações disponibilizadas para o cadastro e utilização do MAEZTRA PROPZ OFFER são verdadeiras, exatas e completas, obrigando-se a comunicar ap MAEZTRA PROPZ OFFER qualquer alteração em tais dados, em até 24 (vinte e quatro) horas da efetivação das alterações.
+Você declara e garante que todas as informações disponibilizadas para o cadastro e utilização do PROPZ SERVICE APP são verdadeiras, exatas e completas, obrigando-se a comunicar ap PROPZ SERVICE APP qualquer alteração em tais dados, em até 24 (vinte e quatro) horas da efetivação das alterações.
 
-Você é responsável por seu próprio conteúdo e deve garantir que detém todos os direitos e autorizações necessários para utilizar o Conteúdo em relação ao MAEZTRA PROPZ OFFER.
+Você é responsável por seu próprio conteúdo e deve garantir que detém todos os direitos e autorizações necessários para utilizar o Conteúdo em relação ao PROPZ SERVICE APP.
 
-A MEAZTRA nem o MAEZTRA PROPZ OFFER são responsáveis por nenhuma medida que você venha a adotar a respeito do seu Conteúdo, incluindo o seu compartilhamento público.
+A MEAZTRA nem o PROPZ SERVICE APP são responsáveis por nenhuma medida que você venha a adotar a respeito do seu Conteúdo, incluindo o seu compartilhamento público.
 
-Recomendamos que você não use nenhum conteúdo no MAEZTRA PROPZ OFFER, a menos que tenha obtido a prévia autorização do proprietário desse conteúdo ou, de outra forma, seja autorizado por lei a fazê-lo.
+Recomendamos que você não use nenhum conteúdo no PROPZ SERVICE APP, a menos que tenha obtido a prévia autorização do proprietário desse conteúdo ou, de outra forma, seja autorizado por lei a fazê-lo.
 
-Não permitimos que alguns conteúdos sejam abordados no MAEZTRA PROPZ OFFER. Ao utilizar o nosso serviço, você concorda com a nossa Política de Conteúdo.
+Não permitimos que alguns conteúdos sejam abordados no PROPZ SERVICE APP. Ao utilizar o nosso serviço, você concorda com a nossa Política de Conteúdo.
 
-Você reconhece que, para garantir a observância das obrigações legais, a MAEZTRA pode vir a analisar determinados conteúdos submetidos ao MAEZTRA PROPZ OFFER para determinar se são ilegais ou infringem este Termo (como no caso de nos relatarem algum conteúdo ilegal). A MAEZTRA também pode vir a alterar, impedir o acesso, excluir ou recusar a exibição de conteúdo que acreditar infringir a lei ou este Termo.
+Você reconhece que, para garantir a observância das obrigações legais, a PROPZ pode vir a analisar determinados conteúdos submetidos ao PROPZ SERVICE APP para determinar se são ilegais ou infringem este Termo (como no caso de nos relatarem algum conteúdo ilegal). A PROPZ também pode vir a alterar, impedir o acesso, excluir ou recusar a exibição de conteúdo que acreditar infringir a lei ou este Termo.
 
 Sem prejuízo do exposto, a MEZTRA não tem, de outra forma, obrigação de monitorar ou analisar qualquer conteúdo submetido ao aplicativo.
 
@@ -72,9 +72,9 @@ Sem prejuízo do exposto, a MEZTRA não tem, de outra forma, obrigação de moni
 
 Você deve usar o serviço exclusivamente em observância à lei aplicável e apenas nos termos por ela permitidos.
 
-Você é responsável por sua conduta, seu Conteúdo e suas comunicações com terceiros enquanto usa o MAEZTRA PROPZ OFFER
+Você é responsável por sua conduta, seu Conteúdo e suas comunicações com terceiros enquanto usa o PROPZ SERVICE APP
 
-Ao utilizar o MAEZTRA PROPZ OFFER, você se compromete a cumprir com os seguintes requisitos:
+Ao utilizar o PROPZ SERVICE APP, você se compromete a cumprir com os seguintes requisitos:
 
 (a) Não fazer mal uso de nosso serviço, interferindo em sua operação normal ou tentando acessá-lo por outro método que não seja pelas interfaces e instruções que fornecemos;
 
@@ -86,55 +86,55 @@ Ao utilizar o MAEZTRA PROPZ OFFER, você se compromete a cumprir com os seguinte
 
 (e) Não transmitir nenhum vírus, malware ou outros tipos de software ilícitos, nem links a esse tipo de software, através do serviço;
 
-(f) Não usar o serviço para infringir os direitos de propriedade intelectual da MAZETRA, do MAEZTRA PROPZ OFFER, ou de terceiro, tampouco para realizar atividades ilícitas.
+(f) Não usar o serviço para infringir os direitos de propriedade intelectual da MAZETRA, do PROPZ SERVICE APP, ou de terceiro, tampouco para realizar atividades ilícitas.
 
 ### 8. GERENCIAMENTO DA CONTA
 
-Você deve criar uma conta para o uso do MAEZTRA PROPZ OFFER.
+Você deve criar uma conta para o uso do PROPZ SERVICE APP.
 
 Você é responsável por manter sua senha em segurança, assim como quaisquer outras credenciais usadas para acessar essa conta.
 
-Você, e não o MAEZTRA PROPZ OFFER, é responsável por qualquer atividade realizada em sua conta (que não sejam as atividades pelas quais o MAEZTRA PROPZ OFFER for diretamente responsável) quer você tenha ou não autorizado essas atividades.
+Você, e não o PROPZ SERVICE APP, é responsável por qualquer atividade realizada em sua conta (que não sejam as atividades pelas quais o PROPZ SERVICE APP for diretamente responsável) quer você tenha ou não autorizado essas atividades.
 
-Se você souber de qualquer acesso não autorizado à sua conta, deverá notificá-lo imediatamente ao MAEZTRA PROPZ OFFER.
+Se você souber de qualquer acesso não autorizado à sua conta, deverá notificá-lo imediatamente ao PROPZ SERVICE APP.
 
 As contas não podem ser compartilhadas, e cada conta deve ser usada apenas pela pessoa autorizada.
 
-Você é responsável por manter, proteger e fazer backups de seu Conteúdo. O MAEZTRA PROPZ OFFER, nem a MAEZTRA será responsável por nenhuma falha no armazenamento, pela perda ou corrupção do seu Conteúdo.
+Você é responsável por manter, proteger e fazer backups de seu Conteúdo. O PROPZ SERVICE APP, nem a PROPZ será responsável por nenhuma falha no armazenamento, pela perda ou corrupção do seu Conteúdo.
 
 ### 9. SUSPENSÃO E ENCERRAMENTO DO PROVIMENTO DA PLATAFORMA
 
-O MAEZTRA PROPZ OFFER pode limitar, suspender ou deixar de prover a plataforma se você não cumprir com este Termo ou se usar a plataforma de forma a gerar danos ao MAEZTRA PROPZ OFFER , à MAEZTRA ou a Terceiros.
+O PROPZ SERVICE APP pode limitar, suspender ou deixar de prover a plataforma se você não cumprir com este Termo ou se usar a plataforma de forma a gerar danos ao PROPZ SERVICE APP , à PROPZ ou a Terceiros.
 
-A MAEZTRA ou o MAEZTRA PROPZ OFFER também poderão suspender o licenciamento da plataforma se houver a suspeita de má conduta adotada por você.
+A PROPZ ou o PROPZ SERVICE APP também poderão suspender o licenciamento da plataforma se houver a suspeita de má conduta adotada por você.
 
-Se seu acesso for suspenso ao MAEZTRA PROPZ OFFER, você poderá ser antecipadamente notificado.
+Se seu acesso for suspenso ao PROPZ SERVICE APP, você poderá ser antecipadamente notificado.
 
-Se houver infração a este Termo de forma contínua e ofensiva, o MAEZTRA PROPZ OFFER poderá adotar medidas para impedir que você continue utilizando o serviço, bloqueando, inclusive, seu endereço IP.
+Se houver infração a este Termo de forma contínua e ofensiva, o PROPZ SERVICE APP poderá adotar medidas para impedir que você continue utilizando o serviço, bloqueando, inclusive, seu endereço IP.
 
 ### 10. ALTERAÇÕES NO USO DA PLATAFORMA
 
-O MAEZTRA PROPZ OFFER realiza constantes alterações e melhorias na plataforma.
+O PROPZ SERVICE APP realiza constantes alterações e melhorias na plataforma.
 
-O MAEZTRA PROPZ OFFER pode adicionar, alterar ou remover a funcionalidade da plataforma a qualquer momento sem prévia notificação.
+O PROPZ SERVICE APP pode adicionar, alterar ou remover a funcionalidade da plataforma a qualquer momento sem prévia notificação.
 
-O MAEZTRA PROPZ OFFER também pode limitar, suspender ou interromper a plataforma a seu exclusivo critério.
+O PROPZ SERVICE APP também pode limitar, suspender ou interromper a plataforma a seu exclusivo critério.
 
 ### 11. RENÚNCIAS E LIMITAÇÕES DE RESPONSABILIDADE
 
-Embora a plataforma do MAEZTRA PROPZ OFFER esteja sempre online, é possível que haja indisponibilidade periódica por vários motivos.
+Embora a plataforma do PROPZ SERVICE APP esteja sempre online, é possível que haja indisponibilidade periódica por vários motivos.
 
-Os executivos, empregados, agentes, fornecedores e licenciadores do MAEZTRA PROPZ OFFER e da MAEZTRA não serão responsáveis por nenhum dano resultante ou relacionado ao uso do APP, considerada a possibilidade de existir instabilidade nas funcionalidades do APP..
+Os executivos, empregados, agentes, fornecedores e licenciadores do PROPZ SERVICE APP e da PROPZ não serão responsáveis por nenhum dano resultante ou relacionado ao uso do APP, considerada a possibilidade de existir instabilidade nas funcionalidades do APP..
 
 ### 12. CUSTOS PARA USO DO APP
 
-Os valores decorrentes pelo uso do MAEZTRA PROPZ OFFER estão detalhados no descritivo do aplicativo e serão pagos em favor da VTEX, de acordo com seus termos e condições.
+Os valores decorrentes pelo uso do PROPZ SERVICE APP estão detalhados no descritivo do aplicativo e serão pagos em favor da VTEX, de acordo com seus termos e condições.
 
 ### 13. DISPOSIÇÕES ADICIONAIS
 
-Este Termo (incluindo eventuais Termos Adicionais) constitui o acordo integral entre você e a MAEZTRA (proprietária exclusiva do MAEZTRA PROPZ OFFER) e sobrepõe-se a quaisquer outros acordos, termos e condições prévios ou contemporâneos, escritos ou orais, relativos a seu objeto. Quaisquer termos e condições que constarem de um pedido de compra ou documento semelhante emitido por você não são aplicáveis ao serviço, não prevalecem sobre este Termo, não fazem parte dele e são nulos.
+Este Termo (incluindo eventuais Termos Adicionais) constitui o acordo integral entre você e a PROPZ (proprietária exclusiva do PROPZ SERVICE APP) e sobrepõe-se a quaisquer outros acordos, termos e condições prévios ou contemporâneos, escritos ou orais, relativos a seu objeto. Quaisquer termos e condições que constarem de um pedido de compra ou documento semelhante emitido por você não são aplicáveis ao serviço, não prevalecem sobre este Termo, não fazem parte dele e são nulos.
 
-O relacionamento entre você e a MAEZTRA (proprietária exclusiva do MAEZTRA PROPZ OFFER) é o de partes contratantes independentes, e não de sócios legais, funcionários ou agentes da outra parte.
+O relacionamento entre você e a PROPZ (proprietária exclusiva do PROPZ SERVICE APP) é o de partes contratantes independentes, e não de sócios legais, funcionários ou agentes da outra parte.
 
 O fato de uma parte deixar de executar uma disposição prevista neste Termo ou de demorar a fazê-lo não será interpretado como uma renúncia, desta parte, a seu direito de fazê-lo posteriormente.
 

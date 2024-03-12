@@ -5,11 +5,11 @@
   "features": [
     "Integrate with a Marketing Campaign Automation tool"
   ],
-  "additionalInformation": "The final configuration of the app will be done after installing the maeztra.propz-offer app",
+  "additionalInformation": "The final configuration of the app will be done after installing the propzpartnerbr.propz-backend app",
   "websiteURL": "https://propz.com.br/",
   "support": {
-    "url": "https://www.maeztra.com",
-    "email": "apppropz@maeztra.movidesk.com"
+    "email": "suporte@propz.com.br",
+    "url": "https://propz.zendesk.com"
   },
   "metricDescription": {
     "postPromotion": "Confirmation of use of the promotion on Propz"

@@ -3,7 +3,7 @@
   "vendor": "propzpartnerbr",
   "version": "0.0.0",
   "title": "Propz Service",
-  "description": "This app provides an Admin Interface for the configurations and a integration to the Loja santo antonio services",
+  "description": "This app provides an Admin Interface for the configurations and a integration to the Propz services",
   "builders": {
     "node": "6.x",
     "docs": "0.x"
@@ -66,29 +66,15 @@
     }
   },
   "billingOptions": {
-    "type": "billable",
+    "type": "free",
     "support": {
-      "email": "apppropz@maeztra.movidesk.com"
+      "email": "suporte@propz.com.br",
+      "url": "https://propz.zendesk.com"
     },
     "availableCountries": [
       "*"
     ],
-    "plans": [
-      {
-        "id": "PlanBRL",
-        "currency": "BRL",
-        "price": {
-          "subscription": 3500
-        }
-      },
-      {
-        "id": "PlanUSD",
-        "currency": "USD",
-        "price": {
-          "subscription": 700
-        }
-      }
-    ]
+    "plans": []
   },
   "credentialType": "absolute",
   "policies": [
@@ -96,6 +82,76 @@
       "name": "outbound-access",
       "attrs": {
         "host": "propzcloud.pzm.in",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "propzcloud.pzm.vc",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "propzcloud.fsj.vc",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "propzcloud.hnt.vg",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "propzcloud.mtm.vc",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "propzcloud.mun.vc",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "propzcloud.nag.vc",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "propzcloud.ndt.vc",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "propzcloud.prf.vc",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "propzcloud.srq.vc",
+        "path": "/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "propzcloud.ven.ac",
         "path": "/*"
       }
     },

@@ -1,12 +1,12 @@
 {
-	"name": "propz-offer",
+	"name": "propz-backend",
 	"private": true,
 	"license": "UNLICENSED",
 	"scripts": {
 		"lint": "eslint --ext js,jsx,ts,tsx .",
 		"format": "prettier --write \"**/*.{ts,tsx,js,jsx,json}\""
 	},
-	"author": "Maeztra",
+	"author": "Propz",
 	"lint-staged": {
 		"*.{ts,js,tsx,jsx}": [
 			"eslint --fix",
