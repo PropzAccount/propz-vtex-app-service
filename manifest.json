@@ -73,8 +73,7 @@
     },
     "availableCountries": [
       "*"
-    ],
-    "plans": [{}]
+    ]
   },
   "credentialType": "absolute",
   "policies": [
