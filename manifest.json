@@ -74,7 +74,7 @@
     "availableCountries": [
       "*"
     ],
-    "plans": []
+    "plans": [{}]
   },
   "credentialType": "absolute",
   "policies": [
