@@ -66,22 +66,20 @@
     }
   },
   "billingOptions": {
-    "type": "free",
-    "support": {
-      "email": "suporte@propz.com.br",
-      "url": "https://propz.zendesk.com"
-    },
-    "availableCountries": [
-      "*"
-    ],
-    "plans": [
-      {
-          "default": true,
-          "id": "default",
-          "name": "Default Plan",
-          "description": "This is the default (and only) plan for this free app."
-      }
-  ]
+
+    "default": {
+      "proportionalToPreviousPaidPeriod": false,
+      "discountRate": 0,
+      "daysUntilRenewal": 30,
+      "daysForInvoicePayment": 1,
+      "paymentGateway": "free",
+      "planName": "Plano Gratuito",
+      "price": 0,
+      "taxClassification": "isnt",
+      "deactivationRoute": "",
+      "description": "Este é um plano gratuito.",
+      "availableCountries": ["BRA"]
+  }
   },
   "credentialType": "absolute",
   "policies": [
