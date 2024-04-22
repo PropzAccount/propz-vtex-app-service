@@ -1,7 +1,7 @@
 {
   "name": "propz-backend",
   "vendor": "propzpartnerbr",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "title": "Propz Service",
   "description": "This app provides an Admin Interface for the configurations and a integration to the Propz services",
   "builders": {
@@ -66,7 +66,6 @@
     }
   },
   "billingOptions": {
-
     "type": "free",
     "support": {
       "email": "suporte@propz.com.br",
@@ -77,12 +76,12 @@
     ],
     "plans": [
       {
-          "default": true,
-          "id": "default",
-          "name": "Default Plan",
-          "description": "This is the default (and only) plan for this free app."
+        "default": true,
+        "id": "default",
+        "name": "Default Plan",
+        "description": "This is the default (and only) plan for this free app."
       }
-  ]
+    ]
   },
   "credentialType": "absolute",
   "policies": [
