@@ -71,15 +71,15 @@
       "email": "suporte@propz.com.br",
       "url": "https://propz.zendesk.com"
     },
-    "availableCountries": [
-      "*"
-    ],
+    "availableCountries": [ "*" ],
     "plans": [
       {
-        "default": true,
         "id": "default",
-        "name": "Default Plan",
-        "description": "This is the default (and only) plan for this free app."
+        "currency": "BRL",
+        "price": {
+          "subscription": 0,
+          "metrics": []
+        }
       }
     ]
   },
