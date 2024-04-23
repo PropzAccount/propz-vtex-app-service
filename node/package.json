@@ -13,6 +13,7 @@
     "eslint": "^6.3.0",
     "eslint-config-vtex": "^11.0.0",
     "prettier": "^1.18.2",
+    "propzpartnerbr.propz-backend": "http://propzpartnerbr.vtexassets.com/_v/public/typings/v1/propzpartnerbr.propz-backend@0.0.2/public/_types/react",
     "typescript": "3.9.7"
   },
   "resolutions": {

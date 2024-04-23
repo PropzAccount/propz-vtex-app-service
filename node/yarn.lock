@@ -2090,6 +2090,10 @@ prom-client@^14.2.0:
   dependencies:
     tdigest "^0.1.1"
 
+"propzpartnerbr.propz-backend@http://propzpartnerbr.vtexassets.com/_v/public/typings/v1/propzpartnerbr.propz-backend@0.0.2/public/_types/react":
+  version "0.0.0"
+  resolved "http://propzpartnerbr.vtexassets.com/_v/public/typings/v1/propzpartnerbr.propz-backend@0.0.2/public/_types/react#fa7a0347e046eab3dd768998fc9252b2c0dd5aef"
+
 pump@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/pump/-/pump-3.0.0.tgz#b4a2116815bde2f4e1ea602354e8c75565107a64"

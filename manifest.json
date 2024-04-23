@@ -36,14 +36,8 @@
         "title": "Tipo de promoção",
         "description": "Selecione o tipo de promoção",
         "type": "string",
-        "enum": [
-          "PERSONALIZED",
-          "MASSIVE"
-        ],
-        "enumNames": [
-          "Personalizada",
-          "Personalizada/Massiva"
-        ],
+        "enum": ["PERSONALIZED", "MASSIVE"],
+        "enumNames": ["Personalizada", "Personalizada/Massiva"],
         "widget": {
           "ui:widget": "radio"
         }
@@ -71,19 +65,7 @@
       "email": "suporte@propz.com.br",
       "url": "https://propz.zendesk.com"
     },
-    "availableCountries": [
-      "*"
-    ],
-    "plans": [
-      {
-        "id": "default",
-        "currency": "BRL",
-        "price": {
-          "subscription": 0,
-          "metrics": []
-        }
-      }
-    ]
+    "availableCountries": ["*"]
   },
   "credentialType": "absolute",
   "policies": [
