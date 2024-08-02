@@ -52,26 +52,50 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
   }
 
   try {
-    const processIdentifiers = async (productRefIds: string) => {
-      if (productRefIds) {
-        const PRODUCTS_IDS_INCLUSIONS = productRefIds.split(',')
+    const processIdentifiers = async (productsItems: {
+      PRODUCT_ID_INCLUSION: string
+      PRODUCT_ECOM_SKU_ID: string
+    }) => {
 
+      if(productsItems.PRODUCT_ECOM_SKU_ID) {
+        
+        const SKUS_IDS_INCLUSIONS = productsItems.PRODUCT_ECOM_SKU_ID.split(',')
+
+        for await (const productSkuId of SKUS_IDS_INCLUSIONS) {
+          const [vtexData] = await Vtex.getSkuAndContext(account, productSkuId, 'sku')
+
+          if (vtexData) {
+           const isAvailableQuantity =
+              vtexData.items[0].sellers[0].commertialOffer.AvailableQuantity > 0
+
+            const productSkuVtex = vtexData?.items[0].itemId
+
+            if (productSkuVtex === productSkuId && isAvailableQuantity) {
+              return vtexData
+            }
+          }
+        }
+      }else{
+        const PRODUCTS_IDS_INCLUSIONS = productsItems.PRODUCT_ID_INCLUSION.split(',')
+  
         for await (const productRefId of PRODUCTS_IDS_INCLUSIONS) {
-          const [vtexData] = await Vtex.getSkuAndContext(account, productRefId)
-
+          const [vtexData] = await Vtex.getSkuAndContext(account, productRefId, 'product')
+    
           if (vtexData) {
             const isAvailableQuantity =
               vtexData &&
               vtexData.items[0].sellers[0].commertialOffer.AvailableQuantity > 0
-
+  
             const productRefVtex = vtexData?.items[0].referenceId[0].Value
-
+  
             if (productRefVtex === productRefId && isAvailableQuantity) {
               return vtexData
             }
           }
         }
       }
+
+    
     }
 
     const processPromotionData = async (response: any) => {
@@ -92,10 +116,10 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
               propzItem.promotion.requiresIdentification
             ) {
               const vtexData = await processIdentifiers(
-                propzItem.promotion.properties.PRODUCT_ID_INCLUSION
+                propzItem.promotion.properties
               )
 
-              if (vtexData) {
+             if (vtexData) {
                 const {
                   PriceWithoutDiscount,
                   Price,
@@ -106,7 +130,7 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                   Object.keys(vtexData.clusterHighlights).length > 0
                     ? vtexData.clusterHighlights
                     : []
-                console.log(vtexData)
+
                 const priceFinal = Number(
                   finalPricePropz(
                     propzItem?.promotion,
@@ -128,7 +152,9 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                       propzItem.remainingMaxPerCustomer > 0
                         ? propzItem.remainingMaxPerCustomer
                         : 'full-promotion',
-                    product: vtexData.items[0].referenceId[0].Value,
+                    product: vtexData.items[0]?.referenceId 
+                     ? vtexData.items[0].referenceId[0].Value
+                     : vtexData.items[0].itemId,
                     typeMechanic: propzItem.promotion.mechanic,
                     quantityFlag: propzItem.promotion.minQuantity,
                   },
@@ -204,6 +230,7 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                   },
                 }
               }
+
             }
           } catch (error) {
             return error
@@ -225,6 +252,7 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
           products: [],
         }
       )
+      
 
       return promotionReduced
     }
@@ -297,9 +325,36 @@ export async function postPricePDP(ctx: Context, next: () => Promise<any>) {
 
   const price = responsePromotionPropz.items.reduce(
     (acc: any, currerItem: any) => {
-      const { PRODUCT_ID_INCLUSION } = currerItem.promotion.properties
+    
+      const { PRODUCT_ID_INCLUSION, PRODUCT_ECOM_SKU_ID } = currerItem.promotion.properties
 
-      if (PRODUCT_ID_INCLUSION) {
+      if(PRODUCT_ECOM_SKU_ID){
+
+        const PRODUCT_ECOM_SKU_IDS = PRODUCT_ECOM_SKU_ID.split(',')
+
+        PRODUCT_ECOM_SKU_IDS.map((currentPromotion: any) => {
+          if (currentPromotion === product.items[0].itemId) {
+            const {
+              PriceWithoutDiscount,
+            } = product.items[0].sellers[0].commertialOffer
+
+            const priceFinal = Number(
+              finalPricePropz(
+                currerItem.promotion,
+                PriceWithoutDiscount
+              ).toFixed(2)
+            )
+
+            acc = {
+              sellingPrice: priceFinal,
+              listPrice: PriceWithoutDiscount,
+            }
+          }
+
+          return currentPromotion
+        })
+
+      }else{
         const PRODUCTS_IDS_INCLUSIONS = PRODUCT_ID_INCLUSION.split(',')
 
         PRODUCTS_IDS_INCLUSIONS.map((currentPromotion: any) => {
