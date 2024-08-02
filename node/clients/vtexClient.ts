@@ -10,8 +10,9 @@ export default class Vtex extends JanusClient {
     })
   }
 
-  public getSkuAndContext(account: string, referenceId: string) {
-    return this.http.get(`https://${account}.vtexcommercestable.com.br/api/catalog_system/pub/products/search?fq=alternateIds_RefId:${referenceId}`, {
+  public getSkuAndContext(account: string, reference: string, typeSearch: 'sku' | 'product') {
+    const filter = typeSearch === 'sku' ? `fq=skuId:${reference}` : `fq=alternateIds_RefId:${reference}`
+    return this.http.get(`https://${account}.vtexcommercestable.com.br/api/catalog_system/pub/products/search?${filter}`, {
       metric: 'getSkuAndContext',
       headers: {
         'Content-Type': 'application/json',
