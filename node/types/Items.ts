@@ -10,6 +10,7 @@ export interface Items {
     minQuantity: number
     properties: {
       PRODUCT_ID_INCLUSION: string
+      PRODUCT_ECOM_SKU_ID: string
     }
     requiresIdentification: boolean
   }
