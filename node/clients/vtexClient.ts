@@ -12,22 +12,24 @@ export default class Vtex extends JanusClient {
 
   public getSkuAndContext(account: string, reference: string, typeSearch: 'sku' | 'product') {
     const filter = typeSearch === 'sku' ? `fq=skuId:${reference}` : `fq=alternateIds_RefId:${reference}`
-    return this.http.get(`https://${account}.vtexcommercestable.com.br/api/catalog_system/pub/products/search?${filter}`, {
+    return this.http.get(`http://${account}.vtexcommercestable.com.br/api/catalog_system/pub/products/search?${filter}`, {
       metric: 'getSkuAndContext',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': "application/json"
+        'Accept': "application/json",
+        'X-Vtex-Use-Https': 'true',
       },
     })
   }
 
   public getOrderForm(account: string, orderFormId: string) {
     
-    return this.http.get(`https://${account}.vtexcommercestable.com.br/api/checkout/pub/orderForm/${orderFormId}`, {
+    return this.http.get(`http://${account}.vtexcommercestable.com.br/api/checkout/pub/orderForm/${orderFormId}`, {
       metric: "getOrderForm",
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Vtex-Use-Https': 'true',
       },
     })
   
@@ -35,13 +37,14 @@ export default class Vtex extends JanusClient {
 
   public getOrderFormConfiguration(account: string, appKey: string, appToken: string) {
     
-    return this.http.get(`https://${account}.vtexcommercestable.com.br/api/checkout/pvt/configuration/orderForm`, {
+    return this.http.get(`http://${account}.vtexcommercestable.com.br/api/checkout/pvt/configuration/orderForm`, {
       metric: "getOrderFormConfiguration",
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'X-VTEX-API-AppKey': appKey,
         'X-VTEX-API-AppToken': appToken,
+        'X-Vtex-Use-Https': 'true',
       },
     })
   
@@ -50,13 +53,14 @@ export default class Vtex extends JanusClient {
   // eslint-disable-next-line max-params
   public postOrderFormConfigurationPriceManual(account: string, appKey: string, appToken: string, orderFormConfiguration: any) {
     
-    return this.http.post(`https://${account}.vtexcommercestable.com.br/api/checkout/pvt/configuration/orderForm`, JSON.stringify(orderFormConfiguration) , {
+    return this.http.post(`http://${account}.vtexcommercestable.com.br/api/checkout/pvt/configuration/orderForm`, JSON.stringify(orderFormConfiguration) , {
       metric: "postOrderFormConfigurationPriceManual",
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'X-VTEX-API-AppKey': appKey,
         'X-VTEX-API-AppToken': appToken,
+        'X-Vtex-Use-Https': 'true',
       },
     })
   }
@@ -64,7 +68,7 @@ export default class Vtex extends JanusClient {
   // eslint-disable-next-line max-params
   public putPrice(account: string, appKey: string, appToken: string, orderFormId: string, itemIndex: string, priceManual: any) {
     return this.http.put(
-      `https://${account}.vtexcommercestable.com.br/api/checkout/pub/orderForm/${orderFormId}/items/${itemIndex}/price`, 
+      `http://${account}.vtexcommercestable.com.br/api/checkout/pub/orderForm/${orderFormId}/items/${itemIndex}/price`, 
     JSON.stringify({price: priceManual}), {
       metric: "putPrice",
       headers: {
@@ -72,6 +76,7 @@ export default class Vtex extends JanusClient {
         'Accept': 'application/json',
         'X-VTEX-API-AppKey': appKey,
         'X-VTEX-API-AppToken': appToken,
+        'X-Vtex-Use-Https': 'true',
       },
     })
   }
