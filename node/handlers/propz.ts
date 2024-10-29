@@ -126,10 +126,21 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                   ListPrice,
                 } = vtexData.items[0].sellers[0].commertialOffer
 
-                const clusterHighlights =
-                  Object.keys(vtexData.clusterHighlights).length > 0
-                    ? vtexData.clusterHighlights
-                    : []
+                const productClusters = Object.keys(vtexData.productClusters).length > 0
+                ? Object.entries(vtexData.productClusters).map(([key, value]) => ({
+                    id: key,
+                    name: value,
+                    __typename: "ProductClusters"
+                }))
+                : [];
+
+                const clusterHighlights = Object.keys(vtexData.clusterHighlights).length > 0
+                ? Object.entries(vtexData.clusterHighlights).map(([key, value]) => ({
+                    id: key,
+                    name: value,
+                    __typename: "ClusterHighlight"
+                }))
+                : [];
 
                 const priceFinal = Number(
                   finalPricePropz(
@@ -182,7 +193,7 @@ export async function getPromotion(ctx: Context, next: () => Promise<any>) {
                       },
                       __typename: 'ProductPriceRange',
                     },
-                    productClusters: vtexData.productClusters,
+                    productClusters,
                     clusterHighlights,
                     skuSpecifications: [],
                     specificationGroups: [],
