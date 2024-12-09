@@ -466,6 +466,8 @@ export async function postVerifyPurchase(
     ctx.body = err
   }
 
+  let allowManualPriceModified = false
+
   try {
     const { orderFormId, document, sessionId } = await json(ctx.req)
 
@@ -485,21 +487,23 @@ export async function postVerifyPurchase(
       )
 
       if (verifyPurchase.ticket.items.length > 0) {
-        try {
-          await Vtex.postOrderFormConfigurationPriceManual(
-            account,
-            appKey,
-            appToken,
-            {
-              ...responseGetOrderFormConfiguration,
-              allowManualPrice: true,
-            }
-          )
-        } catch (error) {
-          const err = error as AxiosError
-          console.log(err.response?.data)
+        if (!responseGetOrderFormConfiguration.allowManualPrice){
+          try {
+            await Vtex.postOrderFormConfigurationPriceManual(
+              account,
+              appKey,
+              appToken,
+              {
+                ...responseGetOrderFormConfiguration,
+                allowManualPrice: true,
+              }
+            )
+            allowManualPriceModified = true
+          } catch (error) {
+            const err = error as AxiosError
+            console.log(err.response?.data)
+          }
         }
-
         try {
           const response: any = await Propz.postVerifyPurchase(
             domain,
@@ -557,15 +561,17 @@ export async function postVerifyPurchase(
           ctx.body = error
         }
 
-        await Vtex.postOrderFormConfigurationPriceManual(
-          account,
-          appKey,
-          appToken,
-          {
-            ...responseGetOrderFormConfiguration,
-            allowManualPrice: false,
-          }
-        )
+        if(allowManualPriceModified){
+          await Vtex.postOrderFormConfigurationPriceManual(
+            account,
+            appKey,
+            appToken,
+            {
+              ...responseGetOrderFormConfiguration,
+              allowManualPrice: false,
+            }
+          )
+        }
       } else {
         ctx.body = {
           response: verifyPurchase,
